@@ -18,6 +18,27 @@
         color: #ffffff;
         overflow-x: hidden;
         line-height: 1.4;
+        cursor: none; /* Hide default cursor for custom particle trail */
+      }
+
+      /* Custom Cursor */
+      .custom-cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: all 0.1s ease;
+        backdrop-filter: blur(5px);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .custom-cursor.clicking {
+        transform: translate(-50%, -50%) scale(0.8);
+        background: rgba(255, 255, 255, 0.3);
       }
 
       /* Glass effect utilities */
@@ -26,16 +47,45 @@
         backdrop-filter: blur(20px) saturate(180%);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 20px;
+        position: relative;
+        overflow: hidden;
       }
 
       .glass-hover {
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transform-style: preserve-3d;
+        perspective: 1000px;
       }
 
       .glass-hover:hover {
         background: rgba(26, 26, 26, 0.9);
         transform: translateY(-2px);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Shine effect overlay for magnetic cards */
+      .glass-hover::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+          600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          rgba(255, 255, 255, 0.15) 0%,
+          rgba(255, 255, 255, 0.05) 40%,
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        border-radius: inherit;
+        mix-blend-mode: screen;
+      }
+
+      .glass-hover:hover::before {
+        opacity: 1;
       }
 
       /* Navigation */
@@ -135,6 +185,7 @@
         flex-direction: column;
         justify-content: center;
         position: relative;
+        cursor: none;
       }
 
       .service-icon {
@@ -272,7 +323,7 @@
         border-radius: 50px;
         font-weight: 600;
         font-size: 14px;
-        cursor: pointer;
+        cursor: none;
         transition: all 0.3s ease;
         text-decoration: none;
         display: inline-block;
@@ -341,37 +392,39 @@
         mask-size: contain;
       }
 
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .nav-links {
-          display: none;
-        }
-
-        .services-grid,
-        .values-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .service-card,
-        .value-card {
-          min-height: auto;
-          padding: 40px 20px;
-        }
-
-        .hero {
-          padding-top: 100px;
-        }
-
-        .footer-content {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 32px;
-        }
+      /* Particle Trail */
+      .particle-trail {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9998;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
       }
 
-      @media (max-width: 480px) {
-        .footer-content {
-          grid-template-columns: 1fr;
-          text-align: center;
+      .trail-particle {
+        position: absolute;
+        pointer-events: none;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 70%, transparent 100%);
+        animation: particleFade 1.2s ease-out forwards;
+      }
+
+      .trail-particle.shard {
+        border-radius: 0;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      }
+
+      @keyframes particleFade {
+        0% {
+          opacity: 1;
+          transform: scale(1) rotate(0deg);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.3) rotate(180deg);
         }
       }
 
@@ -413,12 +466,46 @@
         opacity: 0.8;
       }
 
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .services-grid,
+        .values-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .service-card,
+        .value-card {
+          min-height: auto;
+          padding: 40px 20px;
+        }
+
+        .hero {
+          padding-top: 100px;
+        }
+
+        .footer-content {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 32px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+      }
+
       /* Smooth scrolling */
       html {
         scroll-behavior: smooth;
       }
 
-      /* Remove Framer badge area */
+      /* Footer bottom */
       .footer-bottom {
         text-align: center;
         padding-top: 40px;
@@ -427,6 +514,12 @@
     </style>
   </head>
   <body>
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor"></div>
+
+    <!-- Particle Trail Container -->
+    <div class="particle-trail" id="particleTrail"></div>
+
     <!-- Particle Background -->
     <div class="particle-container" id="particles"></div>
 
@@ -449,17 +542,17 @@
     <!-- Services Section -->
     <section class="services" id="services">
       <div class="services-grid">
-        <div class="service-card glass glass-hover">
+        <div class="service-card glass glass-hover" data-tilt>
           <div class="service-icon square"></div>
           <p class="service-label">AI</p>
           <h3>Automation</h3>
         </div>
-        <div class="service-card glass glass-hover">
+        <div class="service-card glass glass-hover" data-tilt>
           <div class="service-icon circle"></div>
           <p class="service-label">Web</p>
           <h3>Custom Websites</h3>
         </div>
-        <div class="service-card glass glass-hover">
+        <div class="service-card glass glass-hover" data-tilt>
           <div class="service-icon triangle"></div>
           <p class="service-label">Mobile</p>
           <h3>
@@ -473,7 +566,7 @@
     <!-- Values Section -->
     <section class="values">
       <div class="values-grid">
-        <div class="value-card glass glass-hover">
+        <div class="value-card glass glass-hover" data-tilt>
           <div class="value-icon square"></div>
           <h3>100% custom design.</h3>
           <p>
@@ -483,7 +576,7 @@
             style.
           </p>
         </div>
-        <div class="value-card glass glass-hover">
+        <div class="value-card glass glass-hover" data-tilt>
           <div class="value-icon circle"></div>
           <h3>Transparency.</h3>
           <p>
@@ -491,7 +584,7 @@
             soft cyan glow borders and interactive motion.
           </p>
         </div>
-        <div class="value-card glass glass-hover">
+        <div class="value-card glass glass-hover" data-tilt>
           <div class="value-icon triangle"></div>
           <h3>Sci-fi UI.</h3>
           <p>
@@ -545,22 +638,25 @@
     </footer>
 
     <script>
-      // Particle System
+      // Debug flag
+      const DEBUG = true;
+
+      // Enhanced Particle System
       class ParticleSystem {
         constructor() {
           this.container = document.getElementById("particles");
           this.particles = [];
           this.mouseX = window.innerWidth / 2;
           this.mouseY = window.innerHeight / 2;
+          console.log('ParticleSystem initialized');
           this.init();
           this.bindEvents();
           this.animate();
         }
 
         init() {
-          // Create particles
-          const particleCount = Math.floor(window.innerWidth / 15); // Responsive particle count
-
+          const particleCount = Math.floor(window.innerWidth / 15);
+          console.log('Creating', particleCount, 'particles');
           for (let i = 0; i < particleCount; i++) {
             this.createParticle();
           }
@@ -570,12 +666,10 @@
           const particle = document.createElement("div");
           particle.className = "particle";
 
-          // Random size
           const sizes = ["small", "medium", "large"];
           const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
           particle.classList.add(randomSize);
 
-          // Random position
           const x = Math.random() * window.innerWidth;
           const y = Math.random() * window.innerHeight;
 
@@ -590,7 +684,7 @@
             baseY: y,
             currentX: x,
             currentY: y,
-            speed: 0.02 + Math.random() * 0.03, // Different speeds for depth
+            speed: 0.02 + Math.random() * 0.03,
           });
         }
 
@@ -606,31 +700,24 @@
         }
 
         handleResize() {
-          // Remove existing particles
           this.particles.forEach((particle) => {
             particle.element.remove();
           });
           this.particles = [];
-
-          // Recreate particles for new screen size
           this.init();
         }
 
         animate() {
           this.particles.forEach((particle) => {
-            // Calculate distance from mouse to particle
             const dx = this.mouseX - particle.baseX;
             const dy = this.mouseY - particle.baseY;
 
-            // Calculate target position (subtle movement toward cursor)
             const targetX = particle.baseX + dx * particle.speed;
             const targetY = particle.baseY + dy * particle.speed;
 
-            // Smooth interpolation to target
             particle.currentX += (targetX - particle.currentX) * 0.1;
             particle.currentY += (targetY - particle.currentY) * 0.1;
 
-            // Apply position
             particle.element.style.transform = `translate(${
               particle.currentX - particle.baseX
             }px, ${particle.currentY - particle.baseY}px)`;
@@ -640,9 +727,158 @@
         }
       }
 
-      // Initialize particle system when page loads
-      window.addEventListener("load", () => {
-        new ParticleSystem();
+      // Magnetic Glass Card System
+      class MagneticCards {
+        constructor() {
+          this.cards = document.querySelectorAll('[data-tilt]');
+          console.log('MagneticCards found', this.cards.length, 'cards');
+          this.init();
+        }
+
+        init() {
+          this.cards.forEach((card, index) => {
+            console.log('Setting up card', index);
+            card.addEventListener('mousemove', (e) => this.handleMouseMove(e, card));
+            card.addEventListener('mouseleave', (e) => this.handleMouseLeave(e, card));
+          });
+        }
+
+        handleMouseMove(e, card) {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          
+          // More subtle magnetic effect
+          const rotateX = (y - centerY) / centerY * -8;
+          const rotateY = (x - centerX) / centerX * 8;
+          
+          const translateX = (x - centerX) / centerX * 3;
+          const translateY = (y - centerY) / centerY * 3;
+
+          card.style.transform = `
+            perspective(1000px) 
+            rotateX(${rotateX}deg) 
+            rotateY(${rotateY}deg) 
+            translateX(${translateX}px) 
+            translateY(${translateY}px)
+            translateZ(8px)
+          `;
+
+          // Update shine effect position
+          const mouseXPercent = (x / rect.width) * 100;
+          const mouseYPercent = (y / rect.height) * 100;
+          card.style.setProperty('--mouse-x', `${mouseXPercent}%`);
+          card.style.setProperty('--mouse-y', `${mouseYPercent}%`);
+
+          if (DEBUG) {
+            console.log('Card tilt:', rotateX, rotateY);
+          }
+        }
+
+        handleMouseLeave(e, card) {
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateX(0px) translateY(0px) translateZ(0px)';
+        }
+      }
+
+      // Custom Cursor System
+      class CustomCursor {
+        constructor() {
+          this.cursor = document.getElementById('customCursor');
+          console.log('CustomCursor initialized');
+          this.init();
+        }
+
+        init() {
+          document.addEventListener('mousemove', (e) => {
+            this.cursor.style.left = e.clientX + 'px';
+            this.cursor.style.top = e.clientY + 'px';
+          });
+
+          document.addEventListener('mousedown', () => {
+            this.cursor.classList.add('clicking');
+          });
+
+          document.addEventListener('mouseup', () => {
+            this.cursor.classList.remove('clicking');
+          });
+
+          // Make cursor visible
+          this.cursor.style.display = 'block';
+        }
+      }
+
+      // Particle Trail System
+      class ParticleTrail {
+        constructor() {
+          this.container = document.getElementById('particleTrail');
+          this.particles = [];
+          this.lastEmitTime = 0;
+          console.log('ParticleTrail initialized');
+          this.init();
+        }
+
+        init() {
+          document.addEventListener('mousemove', (e) => {
+            this.createTrailParticle(e.clientX, e.clientY);
+          });
+        }
+
+        createTrailParticle(x, y) {
+          const now = Date.now();
+          if (now - this.lastEmitTime < 30) return; // Faster particle creation
+          this.lastEmitTime = now;
+
+          const particleCount = Math.random() < 0.7 ? 1 : 2;
+
+          for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = Math.random() < 0.3 ? 'trail-particle shard' : 'trail-particle';
+            
+            const size = 2 + Math.random() * 6;
+            const offsetX = (Math.random() - 0.5) * 15;
+            const offsetY = (Math.random() - 0.5) * 15;
+            
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = (x + offsetX) + 'px';
+            particle.style.top = (y + offsetY) + 'px';
+            
+            // Add some random rotation for shards
+            if (particle.classList.contains('shard')) {
+              particle.style.transform = `rotate(${Math.random() * 360}deg)`;
+            }
+
+            this.container.appendChild(particle);
+
+            if (DEBUG && Math.random() < 0.1) {
+              console.log('Created trail particle at', x, y);
+            }
+
+            // Remove particle after animation
+            setTimeout(() => {
+              if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+              }
+            }, 1200);
+          }
+        }
+      }
+
+      // Initialize all systems when DOM is ready
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM loaded, initializing systems...');
+        
+        // Small delay to ensure everything is rendered
+        setTimeout(() => {
+          new ParticleSystem();
+          new MagneticCards();
+          new CustomCursor();
+          new ParticleTrail();
+          console.log('All systems initialized');
+        }, 100);
       });
 
       // Smooth scroll for navigation links
