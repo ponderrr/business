@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AIGlass® - Custom AI Solutions</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #000000;
+        color: #ffffff;
+        overflow-x: hidden;
+        line-height: 1.4;
+      }
+
+      /* Glass effect utilities */
+      .glass {
+        background: rgba(26, 26, 26, 0.8);
+        backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+      }
+
+      .glass-hover {
+        transition: all 0.3s ease;
+      }
+
+      .glass-hover:hover {
+        background: rgba(26, 26, 26, 0.9);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Navigation */
+      .nav {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 32px;
+        width: calc(100% - 40px);
+        max-width: 1200px;
+        z-index: 1000;
+      }
+
+      .nav.glass {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        transition: opacity 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        opacity: 0.7;
+      }
+
+      /* Hero Section */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+        position: relative;
+      }
+
+      .hero h1 {
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 16px;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+      }
+
+      .hero .subtitle {
+        font-size: clamp(18px, 3vw, 24px);
+        color: #777777;
+        margin-bottom: 80px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
+
+      /* Services Section */
+      .services {
+        padding: 80px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+        margin-bottom: 80px;
+      }
+
+      .service-card {
+        padding: 60px 40px;
+        text-align: center;
+        min-height: 440px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+      }
+
+      .service-icon {
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #252525;
+        border-radius: 12px;
+      }
+
+      .service-icon.square::before {
+        content: "";
+        width: 40px;
+        height: 40px;
+        background: #444444;
+        border-radius: 8px;
+      }
+
+      .service-icon.circle::before {
+        content: "";
+        width: 40px;
+        height: 40px;
+        background: #444444;
+        border-radius: 50%;
+      }
+
+      .service-icon.triangle::before {
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 34px solid #444444;
+      }
+
+      .service-card h3 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #ffffff;
+        letter-spacing: -0.01em;
+      }
+
+      .service-label {
+        font-size: 13px;
+        color: #777777;
+        margin-bottom: 20px;
+        font-weight: 500;
+      }
+
+      .service-description {
+        font-size: 16px;
+        color: #777777;
+        line-height: 1.5;
+        font-weight: 400;
+      }
+
+      /* Values Section */
+      .values {
+        padding: 80px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+      }
+
+      .value-card {
+        padding: 50px 40px;
+        text-align: left;
+        min-height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .value-icon {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #252525;
+        border-radius: 12px;
+      }
+
+      .value-card h3 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #ffffff;
+        letter-spacing: -0.01em;
+      }
+
+      .value-card p {
+        color: #777777;
+        line-height: 1.6;
+        font-size: 16px;
+      }
+
+      /* Contact Section */
+      .contact {
+        padding: 150px 20px;
+        text-align: center;
+        border-top: 1px solid #191919;
+        margin-top: 80px;
+      }
+
+      .contact h2 {
+        font-size: clamp(28px, 4vw, 36px);
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #ffffff;
+        letter-spacing: -0.02em;
+      }
+
+      .contact .subtitle {
+        font-size: 18px;
+        color: #777777;
+        margin-bottom: 40px;
+      }
+
+      .contact-btn {
+        padding: 14px 24px;
+        background: #ffffff;
+        color: #000000;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .contact-btn:hover {
+        background: #f0f0f0;
+        transform: translateY(-1px);
+      }
+
+      /* Footer */
+      .footer {
+        padding: 80px 20px 40px;
+        border-top: 1px solid #191919;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .footer-section h4 {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+
+      .footer-section ul {
+        list-style: none;
+      }
+
+      .footer-section ul li {
+        margin-bottom: 8px;
+      }
+
+      .footer-section ul li a {
+        color: #777777;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: color 0.3s ease;
+      }
+
+      .footer-section ul li a:hover {
+        color: #ffffff;
+      }
+
+      .footer-logo {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        opacity: 0.3;
+      }
+
+      .footer-logo-icon {
+        width: 51px;
+        height: 17px;
+        background: #ffffff;
+        mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 51 17' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 1.5 C 0 0.948 0.448 0.5 1 0.5 L 15 0.5 C 15.552 0.5 16 0.948 16 1.5 L 16 15.5 C 16 16.052 15.552 16.5 15 16.5 L 1 16.5 C 0.448 16.5 0 16.052 0 15.5 Z M 41.07 1.224 C 41.264 0.898 41.736 0.898 41.93 1.224 L 50.552 15.745 C 50.749 16.078 50.509 16.5 50.122 16.5 L 32.878 16.5 C 32.491 16.5 32.251 16.078 32.448 15.745 Z M 25.5 0 C 30.194 0 34 3.806 34 8.5 C 34 13.194 30.194 17 25.5 17 C 20.806 17 17 13.194 17 8.5 C 17 3.806 20.806 0 25.5 0 Z'/%3E%3C/svg%3E")
+          no-repeat center;
+        mask-size: contain;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .services-grid,
+        .values-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .service-card,
+        .value-card {
+          min-height: auto;
+          padding: 40px 20px;
+        }
+
+        .hero {
+          padding-top: 100px;
+        }
+
+        .footer-content {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 32px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .footer-content {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+      }
+
+      /* Particle Background */
+      .particle-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        pointer-events: none;
+        transition: transform 0.3s ease-out;
+      }
+
+      .particle.small {
+        width: 2px;
+        height: 2px;
+        opacity: 0.4;
+      }
+
+      .particle.medium {
+        width: 3px;
+        height: 3px;
+        opacity: 0.6;
+      }
+
+      .particle.large {
+        width: 4px;
+        height: 4px;
+        opacity: 0.8;
+      }
+
+      /* Smooth scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Remove Framer badge area */
+      .footer-bottom {
+        text-align: center;
+        padding-top: 40px;
+        border-top: 1px solid #191919;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Particle Background -->
+    <div class="particle-container" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav class="nav glass">
+      <div class="logo">AIGlass®</div>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Custom AI Solutions That Transform Businesses</h1>
+      <p class="subtitle">Futuristic. Neon. Limitless.</p>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+      <div class="services-grid">
+        <div class="service-card glass glass-hover">
+          <div class="service-icon square"></div>
+          <p class="service-label">AI</p>
+          <h3>Automation</h3>
+        </div>
+        <div class="service-card glass glass-hover">
+          <div class="service-icon circle"></div>
+          <p class="service-label">Web</p>
+          <h3>Custom Websites</h3>
+        </div>
+        <div class="service-card glass glass-hover">
+          <div class="service-icon triangle"></div>
+          <p class="service-label">Mobile</p>
+          <h3>
+            Apps with glassmorphism, cyan edge glow, and holographic floating
+            effects.
+          </h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values">
+      <div class="values-grid">
+        <div class="value-card glass glass-hover">
+          <div class="value-icon square"></div>
+          <h3>100% custom design.</h3>
+          <p>
+            Every interface floats as a semi-transparent glass panel, with
+            backdrop-filter blur and cyan neon glows radiating through each
+            edge. Particle effects suggest motion and depth in true holographic
+            style.
+          </p>
+        </div>
+        <div class="value-card glass glass-hover">
+          <div class="value-icon circle"></div>
+          <h3>Transparency.</h3>
+          <p>
+            Real-time project tracking on animated, glass-effect panels with
+            soft cyan glow borders and interactive motion.
+          </p>
+        </div>
+        <div class="value-card glass glass-hover">
+          <div class="value-icon triangle"></div>
+          <h3>Sci-fi UI.</h3>
+          <p>
+            Holographic panels and dynamic particles simulate futuristic
+            floating screens—nothing static, everything alive in deep space.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+      <h2>Start your project today.</h2>
+      <p class="subtitle">Let's craft your future with AI.</p>
+      <a href="mailto:hello@aiglass.com" class="contact-btn">Contact</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>About</h4>
+          <ul>
+            <li><a href="#about">Our Story</a></li>
+            <li><a href="#careers">Careers</a></li>
+            <li><a href="#team">Team</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Solutions</h4>
+          <ul>
+            <li><a href="#ai">AI Automation</a></li>
+            <li><a href="#web">Web Design</a></li>
+            <li><a href="#mobile">Mobile Apps</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-logo">
+          <div class="footer-logo-icon"></div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Particle System
+      class ParticleSystem {
+        constructor() {
+          this.container = document.getElementById("particles");
+          this.particles = [];
+          this.mouseX = window.innerWidth / 2;
+          this.mouseY = window.innerHeight / 2;
+          this.init();
+          this.bindEvents();
+          this.animate();
+        }
+
+        init() {
+          // Create particles
+          const particleCount = Math.floor(window.innerWidth / 15); // Responsive particle count
+
+          for (let i = 0; i < particleCount; i++) {
+            this.createParticle();
+          }
+        }
+
+        createParticle() {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+
+          // Random size
+          const sizes = ["small", "medium", "large"];
+          const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+          particle.classList.add(randomSize);
+
+          // Random position
+          const x = Math.random() * window.innerWidth;
+          const y = Math.random() * window.innerHeight;
+
+          particle.style.left = x + "px";
+          particle.style.top = y + "px";
+
+          this.container.appendChild(particle);
+
+          this.particles.push({
+            element: particle,
+            baseX: x,
+            baseY: y,
+            currentX: x,
+            currentY: y,
+            speed: 0.02 + Math.random() * 0.03, // Different speeds for depth
+          });
+        }
+
+        bindEvents() {
+          document.addEventListener("mousemove", (e) => {
+            this.mouseX = e.clientX;
+            this.mouseY = e.clientY;
+          });
+
+          window.addEventListener("resize", () => {
+            this.handleResize();
+          });
+        }
+
+        handleResize() {
+          // Remove existing particles
+          this.particles.forEach((particle) => {
+            particle.element.remove();
+          });
+          this.particles = [];
+
+          // Recreate particles for new screen size
+          this.init();
+        }
+
+        animate() {
+          this.particles.forEach((particle) => {
+            // Calculate distance from mouse to particle
+            const dx = this.mouseX - particle.baseX;
+            const dy = this.mouseY - particle.baseY;
+
+            // Calculate target position (subtle movement toward cursor)
+            const targetX = particle.baseX + dx * particle.speed;
+            const targetY = particle.baseY + dy * particle.speed;
+
+            // Smooth interpolation to target
+            particle.currentX += (targetX - particle.currentX) * 0.1;
+            particle.currentY += (targetY - particle.currentY) * 0.1;
+
+            // Apply position
+            particle.element.style.transform = `translate(${
+              particle.currentX - particle.baseX
+            }px, ${particle.currentY - particle.baseY}px)`;
+          });
+
+          requestAnimationFrame(() => this.animate());
+        }
+      }
+
+      // Initialize particle system when page loads
+      window.addEventListener("load", () => {
+        new ParticleSystem();
+      });
+
+      // Smooth scroll for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
