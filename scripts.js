@@ -405,6 +405,63 @@ class Utils {
   }
 }
 
+// --- PerformanceManager: Intersection Observer for expensive animations ---
+class PerformanceManager {
+  constructor() {
+    this.observer = new IntersectionObserver(
+      this.handleIntersection.bind(this),
+      {
+        rootMargin: "50px",
+      }
+    );
+    this.animatedElements = new Set();
+    this.pausedElements = new Set();
+    this.init();
+  }
+
+  init() {
+    // Observe all float-card elements (portfolio, service, value cards)
+    document.querySelectorAll(".float-card").forEach((el) => {
+      this.observer.observe(el);
+      this.animatedElements.add(el);
+    });
+  }
+
+  handleIntersection(entries) {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.startAnimation(entry.target);
+      } else {
+        this.pauseAnimation(entry.target);
+      }
+    });
+  }
+
+  startAnimation(el) {
+    el.style.animationPlayState = "running";
+    this.pausedElements.delete(el);
+  }
+
+  pauseAnimation(el) {
+    el.style.animationPlayState = "paused";
+    this.pausedElements.add(el);
+  }
+}
+
+// --- Optimized scroll handler for particles ---
+function updateParticles() {
+  // This can be expanded to update only visible/active particles if needed
+  // For now, just triggers a reflow or update if required
+  // (ParticleSystem already uses requestAnimationFrame for animation)
+}
+
+const throttle = Utils.throttle;
+const optimizedScroll = throttle(() => {
+  requestAnimationFrame(updateParticles);
+}, 16); // 60fps cap
+
+window.addEventListener("scroll", optimizedScroll);
+
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     const particleSystem = new ParticleSystem();
@@ -414,6 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
     new CustomCursor();
     new ParticleTrail();
     new FloatAnimation();
+    new PerformanceManager();
 
     if (DEBUG) {
       console.log("All systems initialized");
