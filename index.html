@@ -13,8 +13,12 @@
     <!-- Particle Trail Container -->
     <div class="particle-trail" id="particleTrail"></div>
 
-    <!-- Particle Background -->
-    <div class="particle-container" id="particles"></div>
+    <!-- Layered Particle Background -->
+    <div class="particle-container" id="particles">
+      <div class="particle-layer background" id="backgroundParticles"></div>
+      <div class="particle-layer midground" id="midgroundParticles"></div>
+      <div class="particle-layer foreground" id="foregroundParticles"></div>
+    </div>
 
     <!-- Navigation -->
     <nav class="nav glass">
@@ -377,79 +381,12 @@
       </div>
     </section>
 
-    <!-- Values Section -->
-    <section class="values">
-      <div class="values-grid">
-        <div class="value-card glass glass-hover" data-tilt>
-          <div class="value-icon square"></div>
-          <h3>100% custom design.</h3>
-          <p>
-            Every interface floats as a semi-transparent glass panel, with
-            backdrop-filter blur and cyan neon glows radiating through each
-            edge. Particle effects suggest motion and depth in true holographic
-            style.
-          </p>
-        </div>
-        <div class="value-card glass glass-hover" data-tilt>
-          <div class="value-icon circle"></div>
-          <h3>Transparency.</h3>
-          <p>
-            Real-time project tracking on animated, glass-effect panels with
-            soft cyan glow borders and interactive motion.
-          </p>
-        </div>
-        <div class="value-card glass glass-hover" data-tilt>
-          <div class="value-icon triangle"></div>
-          <h3>Sci-fi UI.</h3>
-          <p>
-            Holographic panels and dynamic particles simulate futuristic
-            floating screens—nothing static, everything alive in deep space.
-          </p>
-        </div>
-      </div>
-    </section>
-
     <!-- Contact Section -->
     <section class="contact" id="contact">
       <h2>Start your project today.</h2>
       <p class="subtitle">Let's craft your future with AI.</p>
       <a href="mailto:hello@crystalcode.com" class="contact-btn">Contact</a>
     </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h4>About</h4>
-          <ul>
-            <li><a href="#about">Our Story</a></li>
-            <li><a href="#careers">Careers</a></li>
-            <li><a href="#team">Team</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Solutions</h4>
-          <ul>
-            <li><a href="#ai">AI Automation</a></li>
-            <li><a href="#web">Web Design</a></li>
-            <li><a href="#mobile">Mobile Apps</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h4>Connect</h4>
-          <ul>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#">Twitter</a></li>
-            <li><a href="#">LinkedIn</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div class="footer-logo">
-          <div class="footer-logo-icon"></div>
-        </div>
-      </div>
-    </footer>
 
     <script src="scripts.js"></script>
   </body>
