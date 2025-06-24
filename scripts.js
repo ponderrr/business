@@ -246,6 +246,13 @@ class FloatAnimation {
       card.style.animationDelay = `${Math.random() * 2}s`; // staggered entry
     });
 
+    // Add float animation to service cards
+    document.querySelectorAll(".service-card").forEach((card, i) => {
+      card.classList.add("float-card");
+      card.style.animationDuration = `${6 + Math.random() * 2}s`;
+      card.style.animationDelay = `${Math.random() * 1.5}s`;
+    });
+
     // Add float animation to value cards too
     document.querySelectorAll(".value-card").forEach((card, i) => {
       card.classList.add("float-card");
@@ -319,4 +326,4 @@ if (DEBUG) {
   });
 }
 
-console.log("AIGlass Scripts loaded successfully! 🚀");
+console.log("CrystalCode Scripts loaded successfully! 🚀");
