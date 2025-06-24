@@ -187,7 +187,7 @@ body {
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(2, 1fr); /* Always 2 columns on desktop */
   gap: 20px;
 }
 
@@ -663,7 +663,7 @@ body {
   }
 
   .services-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* 1 column on mobile */
     gap: 16px;
   }
 
@@ -738,4 +738,72 @@ html {
   text-align: center;
   padding-top: 40px;
   border-top: 1px solid #191919;
+}
+
+/* Animated SVG Icon Effects for Service Cards */
+@keyframes pulseGlow {
+  0% {
+    stroke-width: 3;
+    opacity: 0.7;
+  }
+  50% {
+    stroke-width: 8;
+    opacity: 0.2;
+  }
+  100% {
+    stroke-width: 3;
+    opacity: 0.7;
+  }
+}
+.ai-automation-icon .pulse {
+  stroke: #00fff7;
+  filter: drop-shadow(0 0 8px #00fff7);
+  animation: pulseGlow 1.5s infinite;
+}
+
+@keyframes shimmerMove {
+  0% {
+    x: 8px;
+  }
+  100% {
+    x: 40px;
+  }
+}
+.web-design-icon .shimmer {
+  animation: shimmerMove 2s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.ai-consulting-icon .spin {
+  animation: spin 2.5s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes colorShift {
+  0% {
+    fill: #00fff7;
+  }
+  25% {
+    fill: #6a8dff;
+  }
+  50% {
+    fill: #ffb300;
+  }
+  75% {
+    fill: #00fff7;
+  }
+  100% {
+    fill: #00fff7;
+  }
+}
+.mobile-apps-icon .color-shift {
+  animation: colorShift 2.5s linear infinite;
 }
