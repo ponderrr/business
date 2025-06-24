@@ -138,10 +138,10 @@ body {
 
 /* Contact Section */
 .contact {
-  padding: 150px 20px;
+  padding: 80px 20px 60px 20px;
   text-align: center;
   border-top: 1px solid #191919;
-  margin-top: 80px;
+  margin-top: 30px;
 }
 
 .contact h2 {
@@ -718,7 +718,7 @@ html {
 
 /* Portfolio Section */
 .portfolio {
-  padding: 80px 20px;
+  padding: 80px 20px 40px 20px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -732,6 +732,7 @@ html {
     "large1 large1 medium1"
     "large2 large2 medium2"
     "small1 . .";
+  margin-bottom: 0;
 }
 
 .portfolio-card {
@@ -891,4 +892,402 @@ html {
   margin-bottom: 16px;
   color: #ffffff;
   letter-spacing: -0.01em;
+}
+
+/* Contact Form Styles */
+.contact-form {
+  margin: 40px auto 0 auto;
+  max-width: 420px;
+  padding: 40px 32px 32px 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.13);
+  backdrop-filter: blur(7px) saturate(140%);
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: stretch;
+  position: relative;
+  z-index: 2;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 0;
+}
+
+.glass-input {
+  width: 100%;
+  padding: 16px 20px;
+  background: rgba(26, 26, 26, 0.7);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  color: #fff;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
+  transition: border 0.3s, box-shadow 0.3s;
+  backdrop-filter: blur(12px) saturate(180%);
+  resize: none;
+}
+
+.glass-input:focus {
+  border: 1.5px solid #00fff7;
+  box-shadow: 0 0 0 3px rgba(0, 255, 247, 0.18), 0 2px 16px rgba(0, 0, 0, 0.18);
+  background: rgba(26, 26, 26, 0.85);
+}
+
+/* --- Enhanced Sci-Fi Send Button --- */
+.send-btn {
+  padding: 16px 0;
+  background: linear-gradient(90deg, #00fff7 0%, #6a8dff 100%);
+  color: #000;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 2px 16px rgba(0, 255, 247, 0.08);
+  transition: background 0.3s, box-shadow 0.3s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  z-index: 1;
+}
+.send-btn:hover,
+.send-btn:focus {
+  box-shadow: 0 0 16px 4px #00fff7, 0 0 32px 8px #6a8dff,
+    0 0 48px 16px #00fff744;
+  background: linear-gradient(90deg, #00fff7 0%, #6a8dff 100%);
+  animation: neon-pulse 1.2s infinite alternate;
+}
+@keyframes neon-pulse {
+  0% {
+    box-shadow: 0 0 16px 4px #00fff7, 0 0 32px 8px #6a8dff,
+      0 0 48px 16px #00fff744;
+  }
+  100% {
+    box-shadow: 0 0 32px 8px #00fff7, 0 0 64px 24px #6a8dff,
+      0 0 96px 32px #00fff744;
+  }
+}
+.send-btn .ripple {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    #00fff7 0%,
+    #6a8dff 60%,
+    transparent 100%
+  );
+  opacity: 0.45;
+  width: 0;
+  height: 0;
+  left: var(--ripple-x, 50%);
+  top: var(--ripple-y, 50%);
+  z-index: 2;
+  animation: ripple-glow 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes ripple-glow {
+  0% {
+    opacity: 0.45;
+    width: 0;
+    height: 0;
+  }
+  60% {
+    opacity: 0.25;
+    width: 120px;
+    height: 120px;
+  }
+  100% {
+    opacity: 0;
+    width: 180px;
+    height: 180px;
+  }
+}
+
+.form-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(26, 26, 26, 0.92);
+  border-radius: 20px;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-success.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.checkmark-animation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: checkmark-pop 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes checkmark-pop {
+  0% {
+    transform: scale(0.5) rotate(-20deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2) rotate(8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.success-text {
+  color: #00fff7;
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 8px;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 8px rgba(0, 255, 247, 0.12);
+}
+
+@media (max-width: 600px) {
+  .contact-form {
+    padding: 24px 8px 16px 8px;
+    max-width: 98vw;
+  }
+  .glass-input {
+    font-size: 15px;
+    padding: 12px 12px;
+  }
+}
+
+/* Particle burst effect for send button */
+.send-btn.particle-burst::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  box-shadow: 0 0 16px 4px #00fff7, 0 0 32px 8px #6a8dff, 0 0 24px 6px #fff;
+  opacity: 0.7;
+  animation: burst-particles 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes burst-particles {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  80% {
+    width: 120px;
+    height: 120px;
+    opacity: 0.2;
+    transform: scale(1.2);
+  }
+  100% {
+    width: 120px;
+    height: 120px;
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+
+/* Particle burst for send button */
+.burst-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 3px;
+  background: linear-gradient(90deg, #00fff7 0%, #6a8dff 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 8px 2px #00fff7, 0 0 16px 4px #6a8dff;
+  opacity: 0.85;
+  pointer-events: none;
+  transform: translate(-50%, -50%) rotate(var(--angle, 0deg));
+  animation: burst-shard 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  z-index: 2;
+}
+.burst-particle.ring {
+  width: 0px;
+  height: 0px;
+  border-radius: 50%;
+  background: none;
+  border: 2px solid #00fff7;
+  box-shadow: 0 0 16px 2px #00fff7, 0 0 32px 8px #6a8dff;
+  opacity: 0.4;
+  animation: burst-ring 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes burst-shard {
+  0% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scaleX(1) rotate(var(--angle, 0deg));
+  }
+  70% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scaleX(1.5)
+      translateY(var(--distance, -40px)) rotate(var(--angle, 0deg));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(1.8)
+      translateY(var(--distance, -60px)) rotate(var(--angle, 0deg));
+  }
+}
+@keyframes burst-ring {
+  0% {
+    opacity: 0.4;
+    width: 0px;
+    height: 0px;
+    border-width: 2px;
+  }
+  80% {
+    opacity: 0.15;
+    width: 60px;
+    height: 60px;
+    border-width: 1.5px;
+  }
+  100% {
+    opacity: 0;
+    width: 80px;
+    height: 80px;
+    border-width: 1px;
+  }
+}
+
+/* --- Custom Cursor Enhancements for Form --- */
+.custom-cursor.form-focus {
+  border: 3px solid #00fff7;
+  box-shadow: 0 0 24px 6px #00fff7, 0 0 48px 16px #6a8dff;
+  background: rgba(0, 255, 247, 0.12);
+  transform: translate(-50%, -50%) scale(1.35);
+  transition: box-shadow 0.18s, border 0.18s, background 0.18s, transform 0.18s;
+}
+.custom-cursor.orbit-glow {
+  box-shadow: 0 0 32px 12px #00fff7, 0 0 64px 24px #6a8dff;
+  border-color: #6a8dff;
+  background: rgba(0, 255, 247, 0.18);
+}
+.custom-cursor .cursor-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #00fff7;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(1.1);
+  opacity: 0.7;
+  box-shadow: 0 0 24px 6px #00fff7;
+  animation: orbit-spin 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+@keyframes orbit-spin {
+  0% {
+    transform: translate(-50%, -50%) scale(0.7) rotate(0deg);
+    opacity: 0.2;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.1) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* --- Send Button Morph to Checkmark --- */
+.send-btn.morph-check {
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  background: linear-gradient(90deg, #00fff7 0%, #6a8dff 100%);
+  box-shadow: 0 0 32px 8px #00fff7, 0 0 64px 24px #6a8dff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible;
+}
+.send-btn.morph-check .checkmark-icon {
+  display: block;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.send-btn .checkmark-icon {
+  display: none;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.3s, transform 0.3s;
+}
+.send-btn.morph-check .ripple,
+.send-btn.morph-check .burst-wrap,
+.send-btn.morph-check .sent-message {
+  display: none !important;
+}
+.send-btn.morph-check .sent-message {
+  display: block !important;
+  position: absolute;
+  left: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00fff7;
+  font-size: 18px;
+  font-weight: 600;
+  opacity: 0;
+  animation: sent-message-fade 1.2s 0.2s forwards;
+  white-space: nowrap;
+  text-shadow: 0 2px 8px #00fff7cc;
+}
+@keyframes sent-message-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-16px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* Make message textarea much larger */
+textarea.glass-input {
+  min-height: 120px;
+  font-size: 17px;
+  padding: 20px 20px;
+  resize: vertical;
+}
+
+/* Mouse: ensure pointer-events none for custom cursor */
+#customCursor,
+.custom-cursor {
+  pointer-events: none !important;
 }

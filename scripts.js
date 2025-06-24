@@ -319,7 +319,7 @@ class ParticleTrail {
 
   createTrailParticle(x, y) {
     const now = Date.now();
-    if (now - this.lastEmitTime < 30) return;
+    if (now - this.lastEmitTime < 10) return;
     this.lastEmitTime = now;
 
     const particleCount = Math.random() < 0.7 ? 1 : 2;
@@ -419,6 +419,30 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("All systems initialized");
     }
   }, 100);
+
+  // Formspree AJAX handler
+  const form = document.getElementById("contactForm");
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: { Accept: "application/json" },
+        });
+        if (response.ok) {
+          alert("✅ Transmission sent!");
+          form.reset();
+        } else {
+          alert("⚠️ Something went wrong.");
+        }
+      } catch (err) {
+        alert("⚠️ Something went wrong.");
+      }
+    });
+  }
 });
 
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
@@ -442,3 +466,150 @@ if (DEBUG) {
 }
 
 console.log("CrystalCode Enhanced Scripts loaded successfully! 🚀");
+
+// Custom Cursor Form Focus & Orbit Glow
+(function () {
+  const cursor = document.getElementById("customCursor");
+  if (!cursor) return;
+  function addFormFocus() {
+    cursor.classList.add("form-focus");
+  }
+  function removeFormFocus() {
+    cursor.classList.remove("form-focus");
+  }
+  function addOrbitGlow() {
+    cursor.classList.add("orbit-glow");
+    // Add orbit ring
+    let orbit = cursor.querySelector(".cursor-orbit");
+    if (!orbit) {
+      orbit = document.createElement("span");
+      orbit.className = "cursor-orbit";
+      cursor.appendChild(orbit);
+      setTimeout(() => {
+        if (orbit) orbit.remove();
+      }, 700);
+    }
+  }
+  function removeOrbitGlow() {
+    cursor.classList.remove("orbit-glow");
+  }
+  // Inputs
+  document.querySelectorAll(".glass-input").forEach((input) => {
+    input.addEventListener("mouseenter", addFormFocus);
+    input.addEventListener("mouseleave", removeFormFocus);
+    input.addEventListener("focus", addFormFocus);
+    input.addEventListener("blur", removeFormFocus);
+    input.addEventListener("mousedown", addOrbitGlow);
+    input.addEventListener("mouseup", removeOrbitGlow);
+  });
+  // Button
+  const sendBtn = document.querySelector(".send-btn");
+  if (sendBtn) {
+    sendBtn.addEventListener("mouseenter", addFormFocus);
+    sendBtn.addEventListener("mouseleave", removeFormFocus);
+    sendBtn.addEventListener("mousedown", addOrbitGlow);
+    sendBtn.addEventListener("mouseup", removeOrbitGlow);
+  }
+})();
+
+// Contact Form Interactivity
+(function () {
+  const form = document.getElementById("contactForm");
+  if (!form) return;
+  const btn = form.querySelector(".send-btn");
+  const btnText = btn.querySelector(".btn-text");
+  const checkmark = btn.querySelector(".checkmark-icon");
+  const sentMsg = btn.querySelector(".sent-message");
+  const success = form.querySelector("#formSuccess");
+  const inputs = form.querySelectorAll(".glass-input");
+
+  // Helper: create particle burst
+  function createParticleBurst(button) {
+    const rect = button.getBoundingClientRect();
+    let burstWrap = button.querySelector(".burst-wrap");
+    if (!burstWrap) {
+      burstWrap = document.createElement("span");
+      burstWrap.className = "burst-wrap";
+      burstWrap.style.position = "absolute";
+      burstWrap.style.left = 0;
+      burstWrap.style.top = 0;
+      burstWrap.style.width = "100%";
+      burstWrap.style.height = "100%";
+      burstWrap.style.pointerEvents = "none";
+      burstWrap.style.overflow = "visible";
+      button.style.position = "relative";
+      button.appendChild(burstWrap);
+    }
+    burstWrap.innerHTML = "";
+    const numShards = 7;
+    for (let i = 0; i < numShards; i++) {
+      const angle = (360 / numShards) * i + (Math.random() * 10 - 5);
+      const distance = 36 + Math.random() * 16;
+      const shard = document.createElement("span");
+      shard.className = "burst-particle";
+      shard.style.setProperty("--angle", angle + "deg");
+      shard.style.setProperty("--distance", `-${distance}px`);
+      burstWrap.appendChild(shard);
+    }
+    const ring = document.createElement("span");
+    ring.className = "burst-particle ring";
+    burstWrap.appendChild(ring);
+    setTimeout(() => {
+      if (burstWrap) burstWrap.innerHTML = "";
+    }, 800);
+  }
+
+  // Helper: create ripple effect at mouse position
+  function createRipple(e, button) {
+    let ripple = button.querySelector(".ripple");
+    if (ripple) ripple.remove();
+    ripple = document.createElement("span");
+    ripple.className = "ripple";
+    const rect = button.getBoundingClientRect();
+    const x = e ? e.clientX - rect.left : rect.width / 2;
+    const y = e ? e.clientY - rect.top : rect.height / 2;
+    ripple.style.setProperty("--ripple-x", x + "px");
+    ripple.style.setProperty("--ripple-y", y + "px");
+    button.appendChild(ripple);
+    setTimeout(() => {
+      ripple.remove();
+    }, 700);
+  }
+
+  btn.addEventListener("click", function (e) {
+    createRipple(e, btn);
+  });
+
+  success.classList.remove("active");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    createParticleBurst(btn);
+    btn.classList.add("particle-burst");
+    setTimeout(() => {
+      btn.classList.remove("particle-burst");
+      inputs.forEach((input) => (input.style.opacity = "0.3"));
+      btn.style.opacity = "0.3";
+      success.classList.add("active");
+    }, 350);
+    // Morph button to checkmark
+    setTimeout(() => {
+      btn.classList.add("morph-check");
+      btnText.style.display = "none";
+      checkmark.style.display = "block";
+      checkmark.style.opacity = "1";
+      sentMsg.style.display = "block";
+    }, 800);
+    // Reset form and revert button
+    setTimeout(() => {
+      form.reset();
+      inputs.forEach((input) => (input.style.opacity = "1"));
+      btn.style.opacity = "1";
+      success.classList.remove("active");
+      btn.classList.remove("morph-check");
+      btnText.style.display = "";
+      checkmark.style.display = "";
+      checkmark.style.opacity = "";
+      sentMsg.style.display = "";
+    }, 3500);
+  });
+})();
