@@ -4,514 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AIGlass® - Custom AI Solutions</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
-        background: #000000;
-        color: #ffffff;
-        overflow-x: hidden;
-        line-height: 1.4;
-        cursor: none; /* Hide default cursor for custom particle trail */
-      }
-
-      /* Custom Cursor */
-      .custom-cursor {
-        position: fixed;
-        width: 20px;
-        height: 20px;
-        border: 2px solid rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        transition: all 0.1s ease;
-        backdrop-filter: blur(5px);
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      .custom-cursor.clicking {
-        transform: translate(-50%, -50%) scale(0.8);
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      /* Glass effect utilities */
-      .glass {
-        background: rgba(26, 26, 26, 0.8);
-        backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .glass-hover {
-        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        transform-style: preserve-3d;
-        perspective: 1000px;
-      }
-
-      .glass-hover:hover {
-        background: rgba(26, 26, 26, 0.9);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      }
-
-      /* Shine effect overlay for magnetic cards */
-      .glass-hover::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(
-          600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-          rgba(255, 255, 255, 0.15) 0%,
-          rgba(255, 255, 255, 0.05) 40%,
-          transparent 70%
-        );
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-        border-radius: inherit;
-        mix-blend-mode: screen;
-      }
-
-      .glass-hover:hover::before {
-        opacity: 1;
-      }
-
-      /* Navigation */
-      .nav {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 32px;
-        width: calc(100% - 40px);
-        max-width: 1200px;
-        z-index: 1000;
-      }
-
-      .nav.glass {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .logo {
-        font-size: 20px;
-        font-weight: 700;
-        color: #ffffff;
-        letter-spacing: -0.5px;
-      }
-
-      .nav-links {
-        display: flex;
-        gap: 32px;
-        list-style: none;
-      }
-
-      .nav-links a {
-        color: #ffffff;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 14px;
-        transition: opacity 0.3s ease;
-      }
-
-      .nav-links a:hover {
-        opacity: 0.7;
-      }
-
-      /* Hero Section */
-      .hero {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 0 20px;
-        position: relative;
-      }
-
-      .hero h1 {
-        font-size: clamp(32px, 5vw, 48px);
-        font-weight: 800;
-        line-height: 1.1;
-        margin-bottom: 16px;
-        letter-spacing: -0.02em;
-        color: #ffffff;
-      }
-
-      .hero .subtitle {
-        font-size: clamp(18px, 3vw, 24px);
-        color: #777777;
-        margin-bottom: 80px;
-        font-weight: 400;
-        letter-spacing: -0.01em;
-      }
-
-      /* Services Section */
-      .services {
-        padding: 80px 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .services-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 20px;
-        margin-bottom: 80px;
-      }
-
-      .service-card {
-        padding: 60px 40px;
-        text-align: center;
-        min-height: 440px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: relative;
-        cursor: none;
-      }
-
-      .service-icon {
-        width: 96px;
-        height: 96px;
-        margin: 0 auto 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #252525;
-        border-radius: 12px;
-      }
-
-      .service-icon.square::before {
-        content: "";
-        width: 40px;
-        height: 40px;
-        background: #444444;
-        border-radius: 8px;
-      }
-
-      .service-icon.circle::before {
-        content: "";
-        width: 40px;
-        height: 40px;
-        background: #444444;
-        border-radius: 50%;
-      }
-
-      .service-icon.triangle::before {
-        content: "";
-        width: 0;
-        height: 0;
-        border-left: 20px solid transparent;
-        border-right: 20px solid transparent;
-        border-bottom: 34px solid #444444;
-      }
-
-      .service-card h3 {
-        font-size: 22px;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #ffffff;
-        letter-spacing: -0.01em;
-      }
-
-      .service-label {
-        font-size: 13px;
-        color: #777777;
-        margin-bottom: 20px;
-        font-weight: 500;
-      }
-
-      .service-description {
-        font-size: 16px;
-        color: #777777;
-        line-height: 1.5;
-        font-weight: 400;
-      }
-
-      /* Values Section */
-      .values {
-        padding: 80px 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .values-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-        gap: 20px;
-      }
-
-      .value-card {
-        padding: 50px 40px;
-        text-align: left;
-        min-height: 300px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .value-icon {
-        width: 96px;
-        height: 96px;
-        margin-bottom: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #252525;
-        border-radius: 12px;
-      }
-
-      .value-card h3 {
-        font-size: 22px;
-        font-weight: 600;
-        margin-bottom: 16px;
-        color: #ffffff;
-        letter-spacing: -0.01em;
-      }
-
-      .value-card p {
-        color: #777777;
-        line-height: 1.6;
-        font-size: 16px;
-      }
-
-      /* Contact Section */
-      .contact {
-        padding: 150px 20px;
-        text-align: center;
-        border-top: 1px solid #191919;
-        margin-top: 80px;
-      }
-
-      .contact h2 {
-        font-size: clamp(28px, 4vw, 36px);
-        font-weight: 700;
-        margin-bottom: 16px;
-        color: #ffffff;
-        letter-spacing: -0.02em;
-      }
-
-      .contact .subtitle {
-        font-size: 18px;
-        color: #777777;
-        margin-bottom: 40px;
-      }
-
-      .contact-btn {
-        padding: 14px 24px;
-        background: #ffffff;
-        color: #000000;
-        border: none;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 14px;
-        cursor: none;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-      }
-
-      .contact-btn:hover {
-        background: #f0f0f0;
-        transform: translateY(-1px);
-      }
-
-      /* Footer */
-      .footer {
-        padding: 80px 20px 40px;
-        border-top: 1px solid #191919;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .footer-content {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 40px;
-        margin-bottom: 40px;
-      }
-
-      .footer-section h4 {
-        color: #ffffff;
-        font-size: 15px;
-        font-weight: 500;
-        margin-bottom: 16px;
-      }
-
-      .footer-section ul {
-        list-style: none;
-      }
-
-      .footer-section ul li {
-        margin-bottom: 8px;
-      }
-
-      .footer-section ul li a {
-        color: #777777;
-        text-decoration: none;
-        font-size: 15px;
-        font-weight: 500;
-        transition: color 0.3s ease;
-      }
-
-      .footer-section ul li a:hover {
-        color: #ffffff;
-      }
-
-      .footer-logo {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        opacity: 0.3;
-      }
-
-      .footer-logo-icon {
-        width: 51px;
-        height: 17px;
-        background: #ffffff;
-        mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 51 17' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 1.5 C 0 0.948 0.448 0.5 1 0.5 L 15 0.5 C 15.552 0.5 16 0.948 16 1.5 L 16 15.5 C 16 16.052 15.552 16.5 15 16.5 L 1 16.5 C 0.448 16.5 0 16.052 0 15.5 Z M 41.07 1.224 C 41.264 0.898 41.736 0.898 41.93 1.224 L 50.552 15.745 C 50.749 16.078 50.509 16.5 50.122 16.5 L 32.878 16.5 C 32.491 16.5 32.251 16.078 32.448 15.745 Z M 25.5 0 C 30.194 0 34 3.806 34 8.5 C 34 13.194 30.194 17 25.5 17 C 20.806 17 17 13.194 17 8.5 C 17 3.806 20.806 0 25.5 0 Z'/%3E%3C/svg%3E")
-          no-repeat center;
-        mask-size: contain;
-      }
-
-      /* Particle Trail */
-      .particle-trail {
-        position: fixed;
-        pointer-events: none;
-        z-index: 9998;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-      }
-
-      .trail-particle {
-        position: absolute;
-        pointer-events: none;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 70%, transparent 100%);
-        animation: particleFade 1.2s ease-out forwards;
-      }
-
-      .trail-particle.shard {
-        border-radius: 0;
-        background: linear-gradient(45deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-      }
-
-      @keyframes particleFade {
-        0% {
-          opacity: 1;
-          transform: scale(1) rotate(0deg);
-        }
-        100% {
-          opacity: 0;
-          transform: scale(0.3) rotate(180deg);
-        }
-      }
-
-      /* Particle Background */
-      .particle-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: -1;
-        overflow: hidden;
-      }
-
-      .particle {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.6);
-        border-radius: 50%;
-        pointer-events: none;
-        transition: transform 0.3s ease-out;
-      }
-
-      .particle.small {
-        width: 2px;
-        height: 2px;
-        opacity: 0.4;
-      }
-
-      .particle.medium {
-        width: 3px;
-        height: 3px;
-        opacity: 0.6;
-      }
-
-      .particle.large {
-        width: 4px;
-        height: 4px;
-        opacity: 0.8;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .nav-links {
-          display: none;
-        }
-
-        .services-grid,
-        .values-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .service-card,
-        .value-card {
-          min-height: auto;
-          padding: 40px 20px;
-        }
-
-        .hero {
-          padding-top: 100px;
-        }
-
-        .footer-content {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 32px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .footer-content {
-          grid-template-columns: 1fr;
-          text-align: center;
-        }
-      }
-
-      /* Smooth scrolling */
-      html {
-        scroll-behavior: smooth;
-      }
-
-      /* Footer bottom */
-      .footer-bottom {
-        text-align: center;
-        padding-top: 40px;
-        border-top: 1px solid #191919;
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <!-- Custom Cursor -->
@@ -539,26 +32,205 @@
       <p class="subtitle">Futuristic. Neon. Limitless.</p>
     </section>
 
-    <!-- Services Section -->
-    <section class="services" id="services">
-      <div class="services-grid">
-        <div class="service-card glass glass-hover" data-tilt>
-          <div class="service-icon square"></div>
-          <p class="service-label">AI</p>
-          <h3>Automation</h3>
+    <!-- Portfolio Section -->
+    <section class="portfolio" id="services">
+      <div class="portfolio-grid">
+        <!-- Large Card - Smart Advisor -->
+        <div class="portfolio-card large glass glass-hover" data-tilt>
+          <div class="card-image">
+            <img
+              src="images/app-template.png"
+              alt="Smart Advisor - AI-powered recommendations"
+              style="
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                border-radius: 12px;
+              "
+            />
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">AI Platform</span>
+              <h3>Smart Advisor</h3>
+            </div>
+            <p class="card-description">
+              Full-stack AI recommendation platform leveraging OpenAI GPT-4 to
+              generate personalized movie and book suggestions through
+              intelligent questionnaire analysis.
+            </p>
+          </div>
+          <a
+            href="https://smartadvisor.live/"
+            target="_blank"
+            class="card-link"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path>
+              <polyline points="15,3 21,3 21,9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
         </div>
-        <div class="service-card glass glass-hover" data-tilt>
-          <div class="service-icon circle"></div>
-          <p class="service-label">Web</p>
-          <h3>Custom Websites</h3>
+
+        <!-- Large Card - NextVend -->
+        <div class="portfolio-card large glass glass-hover" data-tilt>
+          <div class="card-image">
+            <img
+              src="images/business-template.png"
+              alt="NextVend - Smart vending solutions"
+              style="
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                border-radius: 12px;
+              "
+            />
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">Business Website</span>
+              <h3>NextVend</h3>
+            </div>
+            <p class="card-description">
+              Modern business website for smart vending solutions. Clean design
+              with interactive elements and responsive layout for optimal user
+              experience.
+            </p>
+          </div>
+          <a href="https://www.nextvend.net/" target="_blank" class="card-link">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path>
+              <polyline points="15,3 21,3 21,9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
         </div>
-        <div class="service-card glass glass-hover" data-tilt>
-          <div class="service-icon triangle"></div>
-          <p class="service-label">Mobile</p>
-          <h3>
-            Apps with glassmorphism, cyan edge glow, and holographic floating
-            effects.
-          </h3>
+
+        <!-- Medium Card - Founder Profile -->
+        <div class="portfolio-card medium glass glass-hover" data-tilt>
+          <div class="card-image">
+            <img
+              src="images/founder-template.png"
+              alt="Learn About Our Founder"
+              style="
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 12px;
+              "
+            />
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">Founder Profile</span>
+              <h3>About Our Founder</h3>
+            </div>
+            <p class="card-description">
+              Learn about our founder by visiting his personal website where he
+              demonstrates his accomplishments, professional timeline, and AI &
+              Data Analytics expertise.
+            </p>
+          </div>
+          <a href="https://andrewponder.com/" target="_blank" class="card-link">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path>
+              <polyline points="15,3 21,3 21,9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Medium Card - AI Automation -->
+        <div class="portfolio-card medium glass glass-hover" data-tilt>
+          <div class="card-image">
+            <img
+              src="images/automation-template.png"
+              alt="AI Data Processing Automation"
+              style="
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 12px;
+              "
+            />
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">AI Automation</span>
+              <h3>Data Processing</h3>
+            </div>
+            <p class="card-description">
+              Transform messy spreadsheets into actionable insights using
+              AI-powered analysis and automation. Streamline your data workflow
+              with intelligent processing.
+            </p>
+          </div>
+        </div>
+
+        <!-- Small Card - Coming Soon -->
+        <div class="portfolio-card small glass glass-hover" data-tilt>
+          <div class="card-image">
+            <img
+              src="images/development-template.png"
+              alt="New Project in Development"
+              style="
+                width: 100%;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 12px;
+              "
+            />
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">In Development</span>
+              <h3>New Project</h3>
+            </div>
+            <p class="card-description">
+              Exciting new AI project currently in development.
+            </p>
+          </div>
+          <div class="card-link coming-soon">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
@@ -637,263 +309,6 @@
       </div>
     </footer>
 
-    <script>
-      // Debug flag
-      const DEBUG = true;
-
-      // Enhanced Particle System
-      class ParticleSystem {
-        constructor() {
-          this.container = document.getElementById("particles");
-          this.particles = [];
-          this.mouseX = window.innerWidth / 2;
-          this.mouseY = window.innerHeight / 2;
-          console.log('ParticleSystem initialized');
-          this.init();
-          this.bindEvents();
-          this.animate();
-        }
-
-        init() {
-          const particleCount = Math.floor(window.innerWidth / 15);
-          console.log('Creating', particleCount, 'particles');
-          for (let i = 0; i < particleCount; i++) {
-            this.createParticle();
-          }
-        }
-
-        createParticle() {
-          const particle = document.createElement("div");
-          particle.className = "particle";
-
-          const sizes = ["small", "medium", "large"];
-          const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
-          particle.classList.add(randomSize);
-
-          const x = Math.random() * window.innerWidth;
-          const y = Math.random() * window.innerHeight;
-
-          particle.style.left = x + "px";
-          particle.style.top = y + "px";
-
-          this.container.appendChild(particle);
-
-          this.particles.push({
-            element: particle,
-            baseX: x,
-            baseY: y,
-            currentX: x,
-            currentY: y,
-            speed: 0.02 + Math.random() * 0.03,
-          });
-        }
-
-        bindEvents() {
-          document.addEventListener("mousemove", (e) => {
-            this.mouseX = e.clientX;
-            this.mouseY = e.clientY;
-          });
-
-          window.addEventListener("resize", () => {
-            this.handleResize();
-          });
-        }
-
-        handleResize() {
-          this.particles.forEach((particle) => {
-            particle.element.remove();
-          });
-          this.particles = [];
-          this.init();
-        }
-
-        animate() {
-          this.particles.forEach((particle) => {
-            const dx = this.mouseX - particle.baseX;
-            const dy = this.mouseY - particle.baseY;
-
-            const targetX = particle.baseX + dx * particle.speed;
-            const targetY = particle.baseY + dy * particle.speed;
-
-            particle.currentX += (targetX - particle.currentX) * 0.1;
-            particle.currentY += (targetY - particle.currentY) * 0.1;
-
-            particle.element.style.transform = `translate(${
-              particle.currentX - particle.baseX
-            }px, ${particle.currentY - particle.baseY}px)`;
-          });
-
-          requestAnimationFrame(() => this.animate());
-        }
-      }
-
-      // Magnetic Glass Card System
-      class MagneticCards {
-        constructor() {
-          this.cards = document.querySelectorAll('[data-tilt]');
-          console.log('MagneticCards found', this.cards.length, 'cards');
-          this.init();
-        }
-
-        init() {
-          this.cards.forEach((card, index) => {
-            console.log('Setting up card', index);
-            card.addEventListener('mousemove', (e) => this.handleMouseMove(e, card));
-            card.addEventListener('mouseleave', (e) => this.handleMouseLeave(e, card));
-          });
-        }
-
-        handleMouseMove(e, card) {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          
-          // More subtle magnetic effect
-          const rotateX = (y - centerY) / centerY * -8;
-          const rotateY = (x - centerX) / centerX * 8;
-          
-          const translateX = (x - centerX) / centerX * 3;
-          const translateY = (y - centerY) / centerY * 3;
-
-          card.style.transform = `
-            perspective(1000px) 
-            rotateX(${rotateX}deg) 
-            rotateY(${rotateY}deg) 
-            translateX(${translateX}px) 
-            translateY(${translateY}px)
-            translateZ(8px)
-          `;
-
-          // Update shine effect position
-          const mouseXPercent = (x / rect.width) * 100;
-          const mouseYPercent = (y / rect.height) * 100;
-          card.style.setProperty('--mouse-x', `${mouseXPercent}%`);
-          card.style.setProperty('--mouse-y', `${mouseYPercent}%`);
-
-          if (DEBUG) {
-            console.log('Card tilt:', rotateX, rotateY);
-          }
-        }
-
-        handleMouseLeave(e, card) {
-          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateX(0px) translateY(0px) translateZ(0px)';
-        }
-      }
-
-      // Custom Cursor System
-      class CustomCursor {
-        constructor() {
-          this.cursor = document.getElementById('customCursor');
-          console.log('CustomCursor initialized');
-          this.init();
-        }
-
-        init() {
-          document.addEventListener('mousemove', (e) => {
-            this.cursor.style.left = e.clientX + 'px';
-            this.cursor.style.top = e.clientY + 'px';
-          });
-
-          document.addEventListener('mousedown', () => {
-            this.cursor.classList.add('clicking');
-          });
-
-          document.addEventListener('mouseup', () => {
-            this.cursor.classList.remove('clicking');
-          });
-
-          // Make cursor visible
-          this.cursor.style.display = 'block';
-        }
-      }
-
-      // Particle Trail System
-      class ParticleTrail {
-        constructor() {
-          this.container = document.getElementById('particleTrail');
-          this.particles = [];
-          this.lastEmitTime = 0;
-          console.log('ParticleTrail initialized');
-          this.init();
-        }
-
-        init() {
-          document.addEventListener('mousemove', (e) => {
-            this.createTrailParticle(e.clientX, e.clientY);
-          });
-        }
-
-        createTrailParticle(x, y) {
-          const now = Date.now();
-          if (now - this.lastEmitTime < 30) return; // Faster particle creation
-          this.lastEmitTime = now;
-
-          const particleCount = Math.random() < 0.7 ? 1 : 2;
-
-          for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = Math.random() < 0.3 ? 'trail-particle shard' : 'trail-particle';
-            
-            const size = 2 + Math.random() * 6;
-            const offsetX = (Math.random() - 0.5) * 15;
-            const offsetY = (Math.random() - 0.5) * 15;
-            
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = (x + offsetX) + 'px';
-            particle.style.top = (y + offsetY) + 'px';
-            
-            // Add some random rotation for shards
-            if (particle.classList.contains('shard')) {
-              particle.style.transform = `rotate(${Math.random() * 360}deg)`;
-            }
-
-            this.container.appendChild(particle);
-
-            if (DEBUG && Math.random() < 0.1) {
-              console.log('Created trail particle at', x, y);
-            }
-
-            // Remove particle after animation
-            setTimeout(() => {
-              if (particle.parentNode) {
-                particle.parentNode.removeChild(particle);
-              }
-            }, 1200);
-          }
-        }
-      }
-
-      // Initialize all systems when DOM is ready
-      document.addEventListener('DOMContentLoaded', () => {
-        console.log('DOM loaded, initializing systems...');
-        
-        // Small delay to ensure everything is rendered
-        setTimeout(() => {
-          new ParticleSystem();
-          new MagneticCards();
-          new CustomCursor();
-          new ParticleTrail();
-          console.log('All systems initialized');
-        }, 100);
-      });
-
-      // Smooth scroll for navigation links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        });
-      });
-    </script>
+    <script src="scripts.js"></script>
   </body>
 </html>
