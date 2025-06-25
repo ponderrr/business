@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CrystalCode - Custom AI Solutions</title>
+
+    <!-- Critical CSS inlined for fastest rendering -->
+    <style>
+      /* Critical above-the-fold styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #000000;
+        color: #ffffff;
+        overflow-x: hidden;
+        line-height: 1.4;
+        cursor: none;
+      }
+
+      .nav {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 32px;
+        width: calc(100% - 40px);
+        max-width: 1200px;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.01em;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        transition: opacity 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        opacity: 0.7;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+        position: relative;
+      }
+
+      .hero h1 {
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 16px;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+      }
+
+      .hero .subtitle {
+        font-size: clamp(18px, 3vw, 24px);
+        color: #777777;
+        margin-bottom: 80px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
+
+      /* Progressive image loading */
+      .progressive-image {
+        transition: filter 0.3s ease;
+        filter: blur(5px);
+        transform: scale(1.05);
+      }
+
+      .progressive-image.loaded {
+        filter: blur(0);
+        transform: scale(1);
+      }
+
+      /* Loading placeholder */
+      .loading-placeholder {
+        background: linear-gradient(
+          90deg,
+          #1a1a1a 25%,
+          #2a2a2a 50%,
+          #1a1a1a 75%
+        );
+        background-size: 200% 100%;
+        animation: loading-shimmer 1.5s infinite;
+      }
+
+      @keyframes loading-shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
+      /* Custom cursor critical styles */
+      .custom-cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: all 0.1s ease;
+        backdrop-filter: blur(5px);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Intersection observer target visibility */
+      .lazy-section {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .lazy-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          cursor: auto;
+        }
+        .custom-cursor {
+          display: none;
+        }
+        .nav-links {
+          display: none;
+        }
+      }
+    </style>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="assets/js/critical.js" as="script" />
+    <link rel="preload" href="assets/css/main.css" as="style" />
+    <link
+      rel="preload"
+      href="assets/fonts/system-font.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://formspree.io" />
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
+    <!-- Favicon and meta tags -->
+    <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+    <meta
+      name="description"
+      content="CrystalCode delivers cutting-edge AI automation, web design, and consulting services. Transform your business with smart solutions and stunning design."
+    />
+    <meta name="theme-color" content="#000000" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav
+      class="nav"
+      id="navigation"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <div class="logo">CrystalCode</div>
+      <ul class="nav-links">
+        <li>
+          <a href="#services" aria-label="Go to Services section">Services</a>
+        </li>
+        <li>
+          <a href="#projects" aria-label="Go to Projects section">Projects</a>
+        </li>
+        <li>
+          <a href="#contact" aria-label="Go to Contact section">Contact</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero" role="banner">
+      <h1>Crafting Digital Futures</h1>
+      <p class="subtitle">
+        Smart Solutions. Stunning Design. Seamless Results.
+      </p>
+    </section>
+
+    <!-- Services Section with lazy loading -->
+    <section
+      class="services lazy-section"
+      id="services"
+      data-lazy-load="services"
+      role="main"
+    >
+      <div class="services-grid">
+        <!-- AI Automation Service -->
+        <div
+          class="service-card glass glass-hover float-card"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="service-icon ai-automation-icon">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                class="pulse"
+                cx="24"
+                cy="24"
+                r="18"
+                stroke="#00fff7"
+                stroke-width="3"
+                fill="none"
+              />
+              <rect
+                x="12"
+                y="16"
+                width="24"
+                height="16"
+                rx="4"
+                fill="#00fff7"
+                opacity="0.7"
+              />
+              <rect x="18" y="22" width="12" height="4" rx="2" fill="#fff" />
+            </svg>
+          </div>
+          <h3>AI Automation</h3>
+          <p>
+            Streamline repetitive tasks and enhance productivity using
+            custom-trained AI workflows that adapt to your business needs.
+          </p>
+          <a
+            href="#projects"
+            class="service-link"
+            aria-label="See AI automation examples"
+            >See examples</a
+          >
+        </div>
+
+        <!-- Web Design Service -->
+        <div
+          class="service-card glass glass-hover float-card"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="service-icon web-design-icon">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect x="8" y="12" width="32" height="20" rx="4" fill="#6a8dff" />
+              <rect
+                class="shimmer"
+                x="8"
+                y="12"
+                width="32"
+                height="20"
+                rx="4"
+                fill="url(#shimmerGradient)"
+              />
+              <defs>
+                <linearGradient id="shimmerGradient">
+                  <stop offset="0%" stop-color="#fff" stop-opacity="0" />
+                  <stop offset="50%" stop-color="#fff" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#fff" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h3>Web Design</h3>
+          <p>
+            Crafted futuristic websites with glassmorphism aesthetics,
+            interactive elements, and cutting-edge user experiences.
+          </p>
+          <a
+            href="#projects"
+            class="service-link"
+            aria-label="View web design portfolio"
+            >View portfolio</a
+          >
+        </div>
+
+        <!-- AI Consulting Service -->
+        <div
+          class="service-card glass glass-hover float-card"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="service-icon ai-consulting-icon">
+            <svg
+              class="spin"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="24"
+                cy="24"
+                r="18"
+                stroke="#ffb300"
+                stroke-width="3"
+                fill="none"
+              />
+              <path
+                d="M24 10v8"
+                stroke="#ffb300"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
+              <path
+                d="M24 30v8"
+                stroke="#ffb300"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
+              <circle cx="24" cy="24" r="6" fill="#ffb300" />
+            </svg>
+          </div>
+          <h3>AI Consulting</h3>
+          <p>
+            Tailored machine learning solutions and strategic AI implementation
+            guidance for businesses ready to scale.
+          </p>
+          <a
+            href="#projects"
+            class="service-link"
+            aria-label="Learn more about AI consulting"
+            >Learn more</a
+          >
+        </div>
+
+        <!-- Mobile Apps Service -->
+        <div
+          class="service-card glass glass-hover float-card"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="service-icon mobile-apps-icon">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                class="color-shift"
+                x="14"
+                y="8"
+                width="20"
+                height="32"
+                rx="5"
+                fill="#00fff7"
+              />
+              <circle cx="24" cy="36" r="2" fill="#fff" />
+              <rect x="18" y="14" width="12" height="4" rx="2" fill="#fff" />
+              <rect x="18" y="22" width="12" height="4" rx="2" fill="#fff" />
+            </svg>
+          </div>
+          <h3>Mobile Apps</h3>
+          <p>
+            Neon-native mobile applications with intuitive interfaces and
+            seamless performance across all devices.
+          </p>
+          <a
+            href="#projects"
+            class="service-link"
+            aria-label="Mobile apps coming soon"
+            >Coming soon</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio Section with progressive image loading -->
+    <section
+      class="portfolio lazy-section"
+      id="projects"
+      data-lazy-load="portfolio"
+      role="main"
+    >
+      <div class="portfolio-grid">
+        <!-- Large Card - Smart Advisor -->
+        <div
+          class="portfolio-card large glass glass-hover"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="card-image">
+            <picture>
+              <source
+                srcset="assets/images/avif/app-template.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="assets/images/webp/app-template.webp"
+                type="image/webp"
+              />
+              <img
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+"
+                data-src="assets/images/fallback/app-template.jpg"
+                alt="Smart Advisor - AI-powered recommendations"
+                class="progressive-image"
+                loading="lazy"
+                width="400"
+                height="200"
+              />
+            </picture>
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">AI Platform</span>
+              <h3>Smart Advisor</h3>
+            </div>
+            <p class="card-description">
+              Full-stack AI recommendation platform leveraging OpenAI GPT-4 to
+              generate personalized movie and book suggestions through
+              intelligent questionnaire analysis.
+            </p>
+          </div>
+          <a
+            href="https://smartadvisor.live/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card-link"
+            aria-label="Visit Smart Advisor website"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path>
+              <polyline points="15,3 21,3 21,9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Large Card - NextVend -->
+        <div
+          class="portfolio-card large glass glass-hover"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="card-image">
+            <picture>
+              <source
+                srcset="assets/images/avif/business-template.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="assets/images/webp/business-template.webp"
+                type="image/webp"
+              />
+              <img
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2IpIi8+PC9zdmc+"
+                data-src="assets/images/fallback/business-template.jpg"
+                alt="NextVend - Smart vending solutions"
+                class="progressive-image"
+                loading="lazy"
+                width="400"
+                height="200"
+              />
+            </picture>
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">Business Website</span>
+              <h3>NextVend</h3>
+            </div>
+            <p class="card-description">
+              Modern business website for smart vending solutions. Clean design
+              with interactive elements and responsive layout for optimal user
+              experience.
+            </p>
+          </div>
+          <a
+            href="https://www.nextvend.net/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card-link"
+            aria-label="Visit NextVend website"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path>
+              <polyline points="15,3 21,3 21,9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Medium Card - Founder Profile -->
+        <div
+          class="portfolio-card medium glass glass-hover"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="card-image">
+            <picture>
+              <source
+                srcset="assets/images/avif/founder-template.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="assets/images/webp/founder-template.webp"
+                type="image/webp"
+              />
+              <img
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImMiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiBmaWxsPSJ1cmwoI2MpIi8+PC9zdmc+"
+                data-src="assets/images/fallback/founder-template.jpg"
+                alt="Learn About Our Founder"
+                class="progressive-image"
+                loading="lazy"
+                width="300"
+                height="150"
+              />
+            </picture>
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">Founder Profile</span>
+              <h3>About Our Founder</h3>
+            </div>
+            <p class="card-description">
+              Learn about our founder by visiting his personal website where he
+              demonstrates his accomplishments, professional timeline, and AI &
+              Data Analytics expertise.
+            </p>
+          </div>
+          <a
+            href="https://andrewponder.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card-link"
+            aria-label="Visit founder's website"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path>
+              <polyline points="15,3 21,3 21,9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Medium Card - AI Automation -->
+        <div
+          class="portfolio-card medium glass glass-hover"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="card-image">
+            <picture>
+              <source
+                srcset="assets/images/avif/automation-template.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="assets/images/webp/automation-template.webp"
+                type="image/webp"
+              />
+              <img
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiBmaWxsPSJ1cmwoI2QpIi8+PC9zdmc+"
+                data-src="assets/images/fallback/automation-template.jpg"
+                alt="AI Data Processing Automation"
+                class="progressive-image"
+                loading="lazy"
+                width="300"
+                height="150"
+              />
+            </picture>
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">AI Automation</span>
+              <h3>Data Processing</h3>
+            </div>
+            <p class="card-description">
+              Transform messy spreadsheets into actionable insights using
+              AI-powered analysis and automation. Streamline your data workflow
+              with intelligent processing.
+            </p>
+          </div>
+        </div>
+
+        <!-- Small Card - Coming Soon -->
+        <div
+          class="portfolio-card small glass glass-hover"
+          data-tilt
+          data-module="magnetic-cards"
+        >
+          <div class="card-image">
+            <picture>
+              <source
+                srcset="assets/images/avif/development-template.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="assets/images/webp/development-template.webp"
+                type="image/webp"
+              />
+              <img
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImUiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2UpIi8+PC9zdmc+"
+                data-src="assets/images/fallback/development-template.jpg"
+                alt="New Project in Development"
+                class="progressive-image"
+                loading="lazy"
+                width="200"
+                height="120"
+              />
+            </picture>
+          </div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-label">In Development</span>
+              <h3>New Project</h3>
+            </div>
+            <p class="card-description">
+              Exciting new AI project currently in development.
+            </p>
+          </div>
+          <div class="card-link coming-soon" aria-label="Project coming soon">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section
+      class="contact lazy-section"
+      id="contact"
+      data-lazy-load="form"
+      role="main"
+    >
+      <h2>Start your project today.</h2>
+      <p class="subtitle">Let's craft your future with AI.</p>
+      <form
+        class="contact-form glass glass-hover"
+        id="contactForm"
+        action="https://formspree.io/f/mpwrowzz"
+        method="POST"
+        autocomplete="off"
+        data-module="form-handler"
+        novalidate
+      >
+        <div class="form-group">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="Name"
+            class="glass-input"
+            aria-label="Your name"
+          />
+        </div>
+        <div class="form-group">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="Email"
+            class="glass-input"
+            aria-label="Your email address"
+          />
+        </div>
+        <div class="form-group">
+          <textarea
+            id="message"
+            name="message"
+            required
+            placeholder="Message"
+            class="glass-input"
+            aria-label="Your message"
+            rows="5"
+          ></textarea>
+        </div>
+        <button type="submit" class="send-btn" aria-label="Send message">
+          <span class="btn-text">Send Transmission</span>
+          <span class="checkmark-icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <circle
+                cx="16"
+                cy="16"
+                r="14"
+                stroke="#00fff7"
+                stroke-width="3"
+                fill="none"
+              />
+              <path
+                d="M10 17l4 4 8-8"
+                stroke="#00fff7"
+                stroke-width="3"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="sent-message">Message Sent. Awaiting Response.</span>
+        </button>
+        <div class="form-success" id="formSuccess" aria-live="polite">
+          <span class="checkmark-animation" aria-hidden="true">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+              <circle
+                cx="24"
+                cy="24"
+                r="22"
+                stroke="#00fff7"
+                stroke-width="4"
+                fill="none"
+              />
+              <path
+                d="M14 25l7 7 13-13"
+                stroke="#00fff7"
+                stroke-width="4"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="success-text">Transmission Sent!</span>
+        </div>
+      </form>
+    </section>
+
+    <!-- Optimized Particle System Container -->
+    <div
+      class="particle-container"
+      id="particles"
+      data-module="particle-system"
+      aria-hidden="true"
+    >
+      <canvas id="particle-canvas" class="particle-canvas"></canvas>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div
+      class="custom-cursor"
+      id="customCursor"
+      data-module="custom-cursor"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Critical JavaScript - loads immediately -->
+    <script src="assets/js/critical.js" defer></script>
+
+    <!-- Non-critical CSS - loads after critical rendering -->
+    <link
+      rel="stylesheet"
+      href="assets/css/main.css"
+      media="print"
+      onload="this.media='all'; this.onload=null;"
+    />
+    <noscript><link rel="stylesheet" href="assets/css/main.css" /></noscript>
+
+    <!-- Schema.org structured data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "CrystalCode",
+        "description": "Custom AI solutions, web design, and consulting services",
+        "url": "https://crystalcode.dev",
+        "sameAs": [
+          "https://smartadvisor.live/",
+          "https://www.nextvend.net/",
+          "https://andrewponder.com/"
+        ],
+        "serviceType": [
+          "AI Automation",
+          "Web Design",
+          "AI Consulting",
+          "Mobile App Development"
+        ]
+      }
+    </script>
+  </body>
+</html>
