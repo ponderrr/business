@@ -934,15 +934,16 @@ html {
   background: linear-gradient(
     45deg,
     transparent 30%,
-    rgba(0, 255, 247, 0.3) 50%,
+    rgba(0, 255, 247, 0.5) 50%,
     transparent 70%
   );
   background-size: 200% 200%;
-  animation: hologram-scan 3s ease-in-out infinite;
+  animation: hologram-scan 5s ease-in-out infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), 0 0 12px #00fff7;
 }
 
 /* Enhanced hologram effect with glitch */
@@ -956,15 +957,16 @@ html {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(0, 255, 247, 0.1),
+    rgba(0, 255, 247, 0.18),
     transparent
   );
   background-size: 200% 100%;
-  animation: hologram-glitch 4s linear infinite;
+  animation: hologram-glitch 6s linear infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  opacity: 0.8;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 @keyframes hologram-scan {
@@ -1186,4 +1188,14 @@ html {
   .quantum-trail {
     animation: none !important;
   }
+}
+
+/* Ensure cursor is visible in hero section */
+.hero {
+  cursor: auto !important;
+}
+
+.hero .custom-cursor {
+  display: block !important;
+  opacity: 1 !important;
 }
