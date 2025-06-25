@@ -7,7 +7,17 @@ class MorphingGlassCards {
   constructor() {
     this.morphTimelines = new Map();
     this.isGSAPLoaded = typeof gsap !== "undefined";
+    this._cardListeners = new Map(); // Track event listeners for cleanup
     this.init();
+  }
+
+  // Helper to add and track event listeners
+  _addCardListener(card, type, handler) {
+    card.addEventListener(type, handler);
+    if (!this._cardListeners.has(card)) {
+      this._cardListeners.set(card, []);
+    }
+    this._cardListeners.get(card).push({ type, handler });
   }
 
   init() {
@@ -67,17 +77,18 @@ class MorphingGlassCards {
 
       this.morphTimelines.set(card, morphTl);
 
-      // Enhanced event listeners
-      card.addEventListener("mouseenter", () => {
+      // Enhanced event listeners (use named handlers)
+      const mouseEnterHandler = () => {
         morphTl.play();
         card.classList.add("morphing");
         this.createMorphingParticles(card);
-      });
-
-      card.addEventListener("mouseleave", () => {
+      };
+      const mouseLeaveHandler = () => {
         morphTl.reverse();
         card.classList.remove("morphing");
-      });
+      };
+      this._addCardListener(card, "mouseenter", mouseEnterHandler);
+      this._addCardListener(card, "mouseleave", mouseLeaveHandler);
     });
 
     // Initialize portfolio card morphing
@@ -87,14 +98,15 @@ class MorphingGlassCards {
   initBasicMorphing() {
     // Fallback for when GSAP is not loaded
     document.querySelectorAll(".service-card").forEach((card) => {
-      card.addEventListener("mouseenter", () => {
+      const mouseEnterHandler = () => {
         card.classList.add("morphing");
         this.createMorphingParticles(card);
-      });
-
-      card.addEventListener("mouseleave", () => {
+      };
+      const mouseLeaveHandler = () => {
         card.classList.remove("morphing");
-      });
+      };
+      this._addCardListener(card, "mouseenter", mouseEnterHandler);
+      this._addCardListener(card, "mouseleave", mouseLeaveHandler);
     });
   }
 
@@ -135,15 +147,16 @@ class MorphingGlassCards {
           0.1
         );
 
-      card.addEventListener("mouseenter", () => {
+      const mouseEnterHandler = () => {
         portfolioTl.play();
         card.classList.add("morphing");
-      });
-
-      card.addEventListener("mouseleave", () => {
+      };
+      const mouseLeaveHandler = () => {
         portfolioTl.reverse();
         card.classList.remove("morphing");
-      });
+      };
+      this._addCardListener(card, "mouseenter", mouseEnterHandler);
+      this._addCardListener(card, "mouseleave", mouseLeaveHandler);
     });
   }
 
@@ -192,23 +205,26 @@ class MorphingGlassCards {
   }
 
   destroy() {
+    // Remove all tracked event listeners
+    this._cardListeners.forEach((listeners, card) => {
+      listeners.forEach(({ type, handler }) => {
+        card.removeEventListener(type, handler);
+      });
+    });
+    this._cardListeners.clear();
     this.morphTimelines.forEach((timeline) => timeline.kill());
     this.morphTimelines.clear();
   }
 }
 
 // Enhanced MagneticCards class that extends the original
-class EnhancedMagneticCards extends MagneticCards {
+class EnhancedMagneticCards {
   constructor() {
-    super();
     this.morphingCards = new MorphingGlassCards();
     this.quantumEffects = new QuantumMagneticField();
   }
 
   handleMouseMove(e, card) {
-    // Call parent method
-    super.handleMouseMove(e, card);
-
     // Add quantum field effect
     this.quantumEffects.updateField(e, card);
   }

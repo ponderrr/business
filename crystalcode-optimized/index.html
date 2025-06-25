@@ -883,9 +883,44 @@
     </script>
 
     <!-- GSAP Scripts for advanced animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+      integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug=="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      if (typeof window.gsap === "undefined") {
+        document.write('<script src="assets/js/vendor/gsap.min.js"><\/script>');
+      }
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
+      integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw=="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      if (typeof window.ScrollTrigger === "undefined") {
+        document.write(
+          '<script src="assets/js/vendor/ScrollTrigger.min.js"><\/script>'
+        );
+      }
+    </script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"
+      integrity="sha512-v/m68W+vaGN/6igoyFpd4GlQzu0jx9/n5gr2PKq5vif+RObyGKHse384YHrOULaxZ810XhlHUrmB3U8UnPB19Q=="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      if (
+        typeof window.gsap === "undefined" ||
+        typeof window.gsap.plugins === "undefined" ||
+        typeof window.gsap.plugins.scrollTo === "undefined"
+      ) {
+        document.write(
+          '<script src="assets/js/vendor/ScrollToPlugin.min.js"><\/script>'
+        );
+      }
+    </script>
 
     <!-- Enhanced Module Loading Script -->
     <script>

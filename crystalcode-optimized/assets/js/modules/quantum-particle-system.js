@@ -3,6 +3,11 @@
  * Extends the existing particle system with quantum effects
  */
 
+import ParticleSystemModule from "./particle-system.js";
+const VirtualParticleSystem =
+  ParticleSystemModule.instance?.constructor ||
+  Object.getPrototypeOf(ParticleSystemModule.instance)?.constructor;
+
 class QuantumParticleTrails extends VirtualParticleSystem {
   constructor() {
     super();
@@ -40,9 +45,6 @@ class QuantumParticleTrails extends VirtualParticleSystem {
       },
       { passive: true }
     );
-
-    // Update quantum field periodically
-    setInterval(() => this.updateQuantumField(), 50);
   }
 
   createQuantumTrail(mouseX, mouseY, velocity = 1) {
@@ -79,7 +81,6 @@ class QuantumParticleTrails extends VirtualParticleSystem {
     }
 
     this.processQuantumInteractions(trail);
-    this.updateQuantumField();
   }
 
   selectQuantumState(energy) {
