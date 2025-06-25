@@ -21,7 +21,25 @@
         color: #ffffff;
         overflow-x: hidden;
         line-height: 1.4;
-        /* cursor: none; */
+        cursor: none;
+        /* Hide all scrollbars */
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      body::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Remove all scrollbar styles globally */
+      * {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      *::-webkit-scrollbar {
+        display: none;
       }
 
       .nav {
@@ -95,10 +113,84 @@
         letter-spacing: -0.01em;
       }
 
+      /* Enhanced Custom Cursor Styles */
+      .custom-cursor {
+        position: fixed;
+        width: 24px;
+        height: 24px;
+        border: 2px solid transparent;
+        background: linear-gradient(45deg, #00fff7, #6a8dff);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        backdrop-filter: blur(10px);
+        display: block;
+        opacity: 1;
+        box-shadow: 0 0 20px rgba(0, 255, 247, 0.4),
+          0 0 40px rgba(106, 141, 255, 0.2),
+          inset 0 0 10px rgba(255, 255, 255, 0.2);
+      }
+
+      .custom-cursor::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 12px;
+        height: 12px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.8),
+          transparent
+        );
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.2s ease;
+      }
+
+      .custom-cursor.clicking {
+        transform: translate(-50%, -50%) scale(0.8);
+        box-shadow: 0 0 30px rgba(0, 255, 247, 0.6),
+          0 0 60px rgba(106, 141, 255, 0.4),
+          inset 0 0 15px rgba(255, 255, 255, 0.4);
+      }
+
+      .custom-cursor.clicking::before {
+        width: 8px;
+        height: 8px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 1),
+          rgba(0, 255, 247, 0.5)
+        );
+      }
+
+      .custom-cursor.form-focus {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(45deg, #00fff7, #ffb300);
+        box-shadow: 0 0 40px rgba(0, 255, 247, 0.8),
+          0 0 80px rgba(255, 179, 0, 0.4),
+          inset 0 0 20px rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+
+      .custom-cursor.magnetic-active {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(45deg, #ff6b6b, #00fff7);
+        box-shadow: 0 0 35px rgba(255, 107, 107, 0.6),
+          0 0 70px rgba(0, 255, 247, 0.3),
+          inset 0 0 15px rgba(255, 255, 255, 0.4);
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+
       /* Progressive image loading */
       .progressive-image {
         transition: filter 0.3s ease;
-        filter: blur(5px);
+        filter: blur(8px);
         transform: scale(1.05);
       }
 
@@ -128,21 +220,6 @@
         }
       }
 
-      /* Custom cursor critical styles */
-      .custom-cursor {
-        position: fixed;
-        width: 20px;
-        height: 20px;
-        border: 2px solid rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        transition: all 0.1s ease;
-        backdrop-filter: blur(5px);
-        background: rgba(255, 255, 255, 0.1);
-      }
-
       /* Intersection observer target visibility */
       .lazy-section {
         opacity: 0;
@@ -159,20 +236,12 @@
         .custom-cursor {
           display: none;
         }
+        body {
+          cursor: auto;
+        }
         .nav-links {
           display: none;
         }
-      }
-
-      /* Hide scrollbar for Chrome, Safari and Opera */
-      body::-webkit-scrollbar {
-        display: none;
-      }
-
-      /* Hide scrollbar for IE, Edge and Firefox */
-      body {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
       }
     </style>
 
@@ -431,7 +500,7 @@
       </div>
     </section>
 
-    <!-- Portfolio Section with progressive image loading -->
+    <!-- Portfolio Section with progressive image loading and improved layout -->
     <section
       class="portfolio lazy-section"
       id="projects"
@@ -439,7 +508,7 @@
       role="main"
     >
       <div class="portfolio-grid">
-        <!-- Large Card - Smart Advisor -->
+        <!-- Row 1: Large Card + Medium Card -->
         <div
           class="portfolio-card large glass glass-hover"
           data-tilt
@@ -447,25 +516,15 @@
           data-magnetic="150"
         >
           <div class="card-image">
-            <picture>
-              <source
-                srcset="assets/images/avif/app-template.avif"
-                type="image/avif"
-              />
-              <source
-                srcset="assets/images/webp/app-template.webp"
-                type="image/webp"
-              />
-              <img
-                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+"
-                data-src="assets/images/fallback/app-template.jpg"
-                alt="Smart Advisor - AI-powered recommendations"
-                class="progressive-image"
-                loading="lazy"
-                width="400"
-                height="200"
-              />
-            </picture>
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+"
+              data-src="assets/images/fallback/app-template.jpg"
+              alt="Smart Advisor - AI-powered recommendations"
+              class="progressive-image"
+              loading="lazy"
+              width="400"
+              height="200"
+            />
           </div>
           <div class="card-content">
             <div class="card-header">
@@ -503,71 +562,7 @@
           </a>
         </div>
 
-        <!-- Large Card - NextVend -->
-        <div
-          class="portfolio-card large glass glass-hover"
-          data-tilt
-          data-module="magnetic-cards"
-          data-magnetic="150"
-        >
-          <div class="card-image">
-            <picture>
-              <source
-                srcset="assets/images/avif/business-template.avif"
-                type="image/avif"
-              />
-              <source
-                srcset="assets/images/webp/business-template.webp"
-                type="image/webp"
-              />
-              <img
-                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2IpIi8+PC9zdmc+"
-                data-src="assets/images/fallback/business-template.jpg"
-                alt="NextVend - Smart vending solutions"
-                class="progressive-image"
-                loading="lazy"
-                width="400"
-                height="200"
-              />
-            </picture>
-          </div>
-          <div class="card-content">
-            <div class="card-header">
-              <span class="card-label">Business Website</span>
-              <h3>NextVend</h3>
-            </div>
-            <p class="card-description">
-              Modern business website for smart vending solutions. Clean design
-              with interactive elements and responsive layout for optimal user
-              experience.
-            </p>
-          </div>
-          <a
-            href="https://www.nextvend.net/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="card-link"
-            aria-label="Visit NextVend website"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              aria-hidden="true"
-            >
-              <path
-                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-              ></path>
-              <polyline points="15,3 21,3 21,9"></polyline>
-              <line x1="10" y1="14" x2="21" y2="3"></line>
-            </svg>
-          </a>
-        </div>
-
-        <!-- Medium Card - Founder Profile -->
+        <!-- Founder Profile -->
         <div
           class="portfolio-card medium glass glass-hover"
           data-tilt
@@ -575,25 +570,15 @@
           data-magnetic="120"
         >
           <div class="card-image">
-            <picture>
-              <source
-                srcset="assets/images/avif/founder-template.avif"
-                type="image/avif"
-              />
-              <source
-                srcset="assets/images/webp/founder-template.webp"
-                type="image/webp"
-              />
-              <img
-                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImMiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiBmaWxsPSJ1cmwoI2MpIi8+PC9zdmc+"
-                data-src="assets/images/fallback/founder-template.jpg"
-                alt="Learn About Our Founder"
-                class="progressive-image"
-                loading="lazy"
-                width="300"
-                height="150"
-              />
-            </picture>
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImMiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiBmaWxsPSJ1cmwoI2MpIi8+PC9zdmc+"
+              data-src="assets/images/fallback/founder-template.jpg"
+              alt="Learn About Our Founder"
+              class="progressive-image"
+              loading="lazy"
+              width="300"
+              height="150"
+            />
           </div>
           <div class="card-content">
             <div class="card-header">
@@ -631,7 +616,7 @@
           </a>
         </div>
 
-        <!-- Medium Card - AI Automation -->
+        <!-- Row 2: Medium Card + Large Card -->
         <div
           class="portfolio-card medium glass glass-hover"
           data-tilt
@@ -639,25 +624,15 @@
           data-magnetic="120"
         >
           <div class="card-image">
-            <picture>
-              <source
-                srcset="assets/images/avif/automation-template.avif"
-                type="image/avif"
-              />
-              <source
-                srcset="assets/images/webp/automation-template.webp"
-                type="image/webp"
-              />
-              <img
-                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiBmaWxsPSJ1cmwoI2QpIi8+PC9zdmc+"
-                data-src="assets/images/fallback/automation-template.jpg"
-                alt="AI Data Processing Automation"
-                class="progressive-image"
-                loading="lazy"
-                width="300"
-                height="150"
-              />
-            </picture>
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiBmaWxsPSJ1cmwoI2QpIi8+PC9zdmc+"
+              data-src="assets/images/fallback/automation-template.jpg"
+              alt="AI Data Processing Automation"
+              class="progressive-image"
+              loading="lazy"
+              width="300"
+              height="150"
+            />
           </div>
           <div class="card-content">
             <div class="card-header">
@@ -672,44 +647,42 @@
           </div>
         </div>
 
-        <!-- Small Card - Coming Soon -->
+        <!-- NextVend -->
         <div
-          class="portfolio-card small glass glass-hover"
+          class="portfolio-card large glass glass-hover"
           data-tilt
           data-module="magnetic-cards"
-          data-magnetic="100"
+          data-magnetic="150"
         >
           <div class="card-image">
-            <picture>
-              <source
-                srcset="assets/images/avif/development-template.avif"
-                type="image/avif"
-              />
-              <source
-                srcset="assets/images/webp/development-template.webp"
-                type="image/webp"
-              />
-              <img
-                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImUiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSJ1cmwoI2UpIi8+PC9zdmc+"
-                data-src="assets/images/fallback/development-template.jpg"
-                alt="New Project in Development"
-                class="progressive-image"
-                loading="lazy"
-                width="200"
-                height="120"
-              />
-            </picture>
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2IpIi8+PC9zdmc+"
+              data-src="assets/images/fallback/business-template.jpg"
+              alt="NextVend - Smart vending solutions"
+              class="progressive-image"
+              loading="lazy"
+              width="400"
+              height="200"
+            />
           </div>
           <div class="card-content">
             <div class="card-header">
-              <span class="card-label">In Development</span>
-              <h3>New Project</h3>
+              <span class="card-label">Business Website</span>
+              <h3>NextVend</h3>
             </div>
             <p class="card-description">
-              Exciting new AI project currently in development.
+              Modern business website for smart vending solutions. Clean design
+              with interactive elements and responsive layout for optimal user
+              experience.
             </p>
           </div>
-          <div class="card-link coming-soon" aria-label="Project coming soon">
+          <a
+            href="https://www.nextvend.net/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="card-link"
+            aria-label="Visit NextVend website"
+          >
             <svg
               width="16"
               height="16"
@@ -719,10 +692,13 @@
               stroke-width="2"
               aria-hidden="true"
             >
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12,6 12,12 16,14"></polyline>
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+              ></path>
+              <polyline points="15,3 21,3 21,9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
             </svg>
-          </div>
+          </a>
         </div>
       </div>
     </section>
@@ -779,7 +755,7 @@
           ></textarea>
         </div>
         <button type="submit" class="send-btn" aria-label="Send message">
-          <span class="btn-text">Send Transmission</span>
+          <span class="btn-text">Send Message</span>
           <span class="checkmark-icon" aria-hidden="true" style="display: none">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <circle
@@ -825,7 +801,7 @@
               />
             </svg>
           </span>
-          <span class="success-text">Transmission Sent!</span>
+          <span class="success-text">Message Sent!</span>
         </div>
       </form>
     </section>
@@ -840,16 +816,13 @@
       <canvas id="particle-canvas" class="particle-canvas"></canvas>
     </div>
 
-    <!-- Custom Cursor -->
+    <!-- Enhanced Custom Cursor -->
     <div
       class="custom-cursor"
       id="customCursor"
       data-module="custom-cursor"
       aria-hidden="true"
     ></div>
-
-    <!-- Critical JavaScript - loads immediately -->
-    <script src="assets/js/critical.js" defer></script>
 
     <!-- Non-critical CSS - loads after critical rendering -->
     <link
@@ -859,6 +832,407 @@
       onload="this.media='all'; this.onload=null;"
     />
     <noscript><link rel="stylesheet" href="assets/css/main.css" /></noscript>
+
+    <!-- Enhanced CSS for cursor visibility and portfolio grid -->
+    <style>
+      /* Enhanced Portfolio Grid Layout */
+      .portfolio-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-auto-rows: minmax(300px, auto);
+        gap: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Row 1: Large card spans 1 column, medium card spans 1 column */
+      .portfolio-card:nth-child(1) {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .portfolio-card:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      /* Row 2: Medium card spans 1 column, large card spans 1 column */
+      .portfolio-card:nth-child(3) {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .portfolio-card:nth-child(4) {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .portfolio-card {
+        position: relative;
+        padding: 0;
+        border-radius: 20px;
+        overflow: hidden;
+        cursor: none;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        background: rgba(26, 26, 26, 0.8);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        min-height: 400px;
+      }
+
+      .portfolio-card.large {
+        min-height: 450px;
+      }
+
+      .portfolio-card.medium {
+        min-height: 350px;
+      }
+
+      /* Enhanced cursor styles for better visibility */
+      .services .custom-cursor,
+      .portfolio .custom-cursor {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        z-index: 9999 !important;
+      }
+
+      /* Ensure cursor is visible everywhere */
+      .custom-cursor {
+        position: fixed !important;
+        pointer-events: none !important;
+        z-index: 9999 !important;
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      /* Services section specific cursor visibility */
+      .services {
+        position: relative;
+        z-index: 1;
+      }
+
+      .services * {
+        cursor: none !important;
+      }
+
+      /* Portfolio section specific cursor visibility */
+      .portfolio {
+        position: relative;
+        z-index: 1;
+      }
+
+      .portfolio * {
+        cursor: none !important;
+      }
+
+      /* Form enhancement */
+      .send-btn {
+        padding: 16px 0;
+        background: linear-gradient(90deg, #00fff7 0%, #6a8dff 100%);
+        color: #000;
+        font-weight: 700;
+        font-size: 16px;
+        border: none;
+        border-radius: 50px;
+        cursor: none;
+        box-shadow: 0 2px 16px rgba(0, 255, 247, 0.08);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        outline: none;
+        z-index: 1;
+      }
+
+      .send-btn:hover,
+      .send-btn:focus {
+        box-shadow: 0 0 16px 4px #00fff7, 0 0 32px 8px #6a8dff;
+        transform: translateY(-2px);
+      }
+
+      /* Mobile responsive adjustments */
+      @media (max-width: 1200px) {
+        .portfolio-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .portfolio-card:nth-child(n) {
+          grid-column: 1;
+          grid-row: auto;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .portfolio-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+          padding: 0 16px;
+        }
+
+        .portfolio-card {
+          min-height: 300px;
+        }
+
+        .portfolio-card.large,
+        .portfolio-card.medium {
+          min-height: 300px;
+        }
+      }
+    </style>
+
+    <!-- Enhanced JavaScript for cursor management -->
+    <script>
+      // Enhanced cursor management script
+      (function () {
+        "use strict";
+
+        let cursor = null;
+        let isMouseDown = false;
+
+        function initEnhancedCursor() {
+          cursor = document.getElementById("customCursor");
+
+          if (!cursor || window.innerWidth <= 768) {
+            document.body.style.cursor = "auto";
+            return;
+          }
+
+          // Ensure cursor is always visible
+          cursor.style.display = "block";
+          cursor.style.opacity = "1";
+          cursor.style.visibility = "visible";
+          cursor.style.zIndex = "9999";
+          cursor.style.position = "fixed";
+          cursor.style.pointerEvents = "none";
+
+          // Set body cursor to none
+          document.body.style.cursor = "none";
+
+          // Track mouse movement
+          document.addEventListener("mousemove", updateCursorPosition, {
+            passive: true,
+          });
+          document.addEventListener("mousedown", handleMouseDown, {
+            passive: true,
+          });
+          document.addEventListener("mouseup", handleMouseUp, {
+            passive: true,
+          });
+
+          // Enhanced form interactions
+          setupFormInteractions();
+
+          // Enhanced service card interactions
+          setupServiceInteractions();
+
+          // Enhanced portfolio interactions
+          setupPortfolioInteractions();
+        }
+
+        function updateCursorPosition(e) {
+          if (!cursor) return;
+
+          requestAnimationFrame(() => {
+            cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+          });
+        }
+
+        function handleMouseDown() {
+          isMouseDown = true;
+          if (cursor) cursor.classList.add("clicking");
+        }
+
+        function handleMouseUp() {
+          isMouseDown = false;
+          if (cursor) cursor.classList.remove("clicking");
+        }
+
+        function setupFormInteractions() {
+          const formElements = document.querySelectorAll(
+            ".glass-input, .send-btn"
+          );
+          formElements.forEach((el) => {
+            el.addEventListener("mouseenter", () => {
+              if (cursor) cursor.classList.add("form-focus");
+            });
+            el.addEventListener("mouseleave", () => {
+              if (cursor) cursor.classList.remove("form-focus");
+            });
+          });
+        }
+
+        function setupServiceInteractions() {
+          const serviceCards = document.querySelectorAll(".service-card");
+          serviceCards.forEach((card) => {
+            card.addEventListener("mouseenter", () => {
+              if (cursor) cursor.classList.add("magnetic-active");
+            });
+            card.addEventListener("mouseleave", () => {
+              if (cursor) cursor.classList.remove("magnetic-active");
+            });
+          });
+        }
+
+        function setupPortfolioInteractions() {
+          const portfolioCards = document.querySelectorAll(".portfolio-card");
+          portfolioCards.forEach((card) => {
+            card.addEventListener("mouseenter", () => {
+              if (cursor) cursor.classList.add("magnetic-active");
+            });
+            card.addEventListener("mouseleave", () => {
+              if (cursor) cursor.classList.remove("magnetic-active");
+            });
+          });
+        }
+
+        // Enhanced form submission
+        function setupFormSubmission() {
+          const form = document.getElementById("contactForm");
+          if (!form) return;
+
+          form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const submitBtn = form.querySelector(".send-btn");
+            const btnText = submitBtn.querySelector(".btn-text");
+            const checkmark = submitBtn.querySelector(".checkmark-icon");
+            const sentMsg = submitBtn.querySelector(".sent-message");
+            const successDiv = document.getElementById("formSuccess");
+
+            // Show loading state
+            btnText.style.display = "none";
+            checkmark.style.display = "inline-flex";
+            sentMsg.style.display = "inline";
+            submitBtn.disabled = true;
+
+            try {
+              const response = await fetch(form.action, {
+                method: "POST",
+                body: formData,
+                headers: { Accept: "application/json" },
+              });
+
+              if (response.ok) {
+                // Success
+                successDiv.classList.add("active");
+                successDiv.querySelector(".success-text").textContent =
+                  "Message Sent!";
+
+                setTimeout(() => {
+                  form.reset();
+                  successDiv.classList.remove("active");
+                  btnText.style.display = "inline";
+                  checkmark.style.display = "none";
+                  sentMsg.style.display = "none";
+                  submitBtn.disabled = false;
+                }, 3000);
+              } else {
+                throw new Error("Network response was not ok");
+              }
+            } catch (error) {
+              // Error
+              successDiv.classList.add("active", "error");
+              successDiv.querySelector(".success-text").textContent =
+                "Something went wrong. Please try again.";
+
+              setTimeout(() => {
+                successDiv.classList.remove("active", "error");
+                successDiv.querySelector(".success-text").textContent =
+                  "Message Sent!";
+                btnText.style.display = "inline";
+                checkmark.style.display = "none";
+                sentMsg.style.display = "none";
+                submitBtn.disabled = false;
+              }, 3000);
+            }
+          });
+        }
+
+        // Progressive image loading
+        function setupProgressiveImages() {
+          const images = document.querySelectorAll(
+            ".progressive-image[data-src]"
+          );
+
+          const imageObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  const img = entry.target;
+                  const tempImg = new Image();
+
+                  tempImg.onload = () => {
+                    requestAnimationFrame(() => {
+                      img.src = tempImg.src;
+                      img.classList.add("loaded");
+                    });
+                  };
+
+                  tempImg.onerror = () => {
+                    img.classList.add("error");
+                  };
+
+                  tempImg.src = img.dataset.src;
+                  imageObserver.unobserve(img);
+                }
+              });
+            },
+            { rootMargin: "100px" }
+          );
+
+          images.forEach((img) => imageObserver.observe(img));
+        }
+
+        // Initialize everything when DOM is ready
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", function () {
+            initEnhancedCursor();
+            setupFormSubmission();
+            setupProgressiveImages();
+          });
+        } else {
+          initEnhancedCursor();
+          setupFormSubmission();
+          setupProgressiveImages();
+        }
+
+        // Handle resize
+        window.addEventListener("resize", () => {
+          if (window.innerWidth <= 768) {
+            document.body.style.cursor = "auto";
+            if (cursor) cursor.style.display = "none";
+          } else {
+            initEnhancedCursor();
+          }
+        });
+      })();
+    </script>
+
+    <!-- Critical JavaScript - loads immediately -->
+    <script src="assets/js/critical.js" defer></script>
+
+    <!-- GSAP Scripts for advanced animations -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
+      integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
+      integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"
+      integrity="sha512-v/m68W+vaGN/6igoyFpd4GlQzu0jx9/n5gr2PKq5vif+RObyGKHse384YHrOULaxZ810XhlHUrmB3U8UnPB19Q=="
+      crossorigin="anonymous"
+    ></script>
 
     <!-- Schema.org structured data for SEO -->
     <script type="application/ld+json">
@@ -880,110 +1254,6 @@
           "Mobile App Development"
         ]
       }
-    </script>
-
-    <!-- GSAP Scripts for advanced animations -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"
-      integrity="sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug=="
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      if (typeof window.gsap === "undefined") {
-        document.write('<script src="assets/js/vendor/gsap.min.js"><\/script>');
-      }
-    </script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"
-      integrity="sha512-Ic9xkERjyZ1xgJ5svx3y0u3xrvfT/uPkV99LBwe68xjy/mGtO+4eURHZBW2xW4SZbFrF1Tf090XqB+EVgXnVjw=="
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      if (typeof window.ScrollTrigger === "undefined") {
-        document.write(
-          '<script src="assets/js/vendor/ScrollTrigger.min.js"><\/script>'
-        );
-      }
-    </script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"
-      integrity="sha512-v/m68W+vaGN/6igoyFpd4GlQzu0jx9/n5gr2PKq5vif+RObyGKHse384YHrOULaxZ810XhlHUrmB3U8UnPB19Q=="
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      if (
-        typeof window.gsap === "undefined" ||
-        typeof window.gsap.plugins === "undefined" ||
-        typeof window.gsap.plugins.scrollTo === "undefined"
-      ) {
-        document.write(
-          '<script src="assets/js/vendor/ScrollToPlugin.min.js"><\/script>'
-        );
-      }
-    </script>
-
-    <!-- Enhanced Module Loading Script -->
-    <script>
-      // Enhanced initialization to use quantum particle system
-      document.addEventListener("DOMContentLoaded", function () {
-        // Update the critical.js to load enhanced modules
-        if (window.CrystalCode && window.CrystalCode.performanceManager) {
-          // Override particle system module loading
-          const originalLoadModule =
-            window.CrystalCode.performanceManager.loadModule.bind(
-              window.CrystalCode.performanceManager
-            );
-
-          window.CrystalCode.performanceManager.loadModule = async function (
-            moduleName
-          ) {
-            if (moduleName === "particle-system") {
-              // Load quantum particle system instead
-              try {
-                const module = await import(
-                  "./assets/js/modules/quantum-particle-system.js"
-                );
-                if (
-                  module.default &&
-                  typeof module.default.init === "function"
-                ) {
-                  await module.default.init();
-                }
-                window.CrystalCode.performanceManager.constructor.OptimizationState.loadedModules.add(
-                  moduleName
-                );
-                console.log("🌟 Quantum particle system loaded successfully");
-              } catch (error) {
-                console.error("Failed to load quantum particle system:", error);
-                // Fallback to original particle system
-                return originalLoadModule(moduleName);
-              }
-            } else if (moduleName === "magnetic-cards") {
-              // Load enhanced magnetic cards
-              try {
-                const module = await import(
-                  "./assets/js/modules/enhanced-magnetic-cards.js"
-                );
-                if (
-                  module.default &&
-                  typeof module.default.init === "function"
-                ) {
-                  await module.default.init();
-                }
-                window.CrystalCode.performanceManager.constructor.OptimizationState.loadedModules.add(
-                  moduleName
-                );
-                console.log("🔮 Enhanced magnetic cards loaded successfully");
-              } catch (error) {
-                console.error("Failed to load enhanced magnetic cards:", error);
-                return originalLoadModule(moduleName);
-              }
-            } else {
-              return originalLoadModule(moduleName);
-            }
-          };
-        }
-      });
     </script>
   </body>
 </html>
