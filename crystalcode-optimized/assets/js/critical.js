@@ -123,9 +123,11 @@ class CriticalPerformanceManager {
     switch (sectionType) {
       case "services":
         moduleRequests.push(this.loadModule("magnetic-cards"));
+        moduleRequests.push(this.loadModule("gsap-animations"));
         break;
       case "portfolio":
         moduleRequests.push(this.loadModule("magnetic-cards"));
+        moduleRequests.push(this.loadModule("gsap-animations"));
         break;
       case "form":
         moduleRequests.push(this.loadModule("form-handler"));
@@ -242,6 +244,7 @@ class CriticalPerformanceManager {
         if (OptimizationState.isHighPerformanceDevice) {
           this.loadModule("particle-system");
           this.loadModule("custom-cursor");
+          this.loadModule("gsap-animations");
         }
       },
       { timeout: 3000 }
@@ -689,14 +692,6 @@ if (typeof module !== "undefined" && module.exports) {
     CriticalErrorHandler,
     OptimizationState,
   };
-}
-
-// Analytics integration (if available)
-if (typeof gtag !== "undefined") {
-  gtag("config", "GA_MEASUREMENT_ID", {
-    page_title: "CrystalCode - Custom AI Solutions",
-    page_location: window.location.href,
-  });
 }
 
 console.log("⚡ CrystalCode Critical JavaScript loaded successfully!");

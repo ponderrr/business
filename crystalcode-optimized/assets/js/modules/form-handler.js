@@ -1,3 +1,5 @@
+const FORM_NOTIFICATION_TIMEOUT = 3500;
+
 class EnhancedFormHandler {
   constructor() {
     this.form = document.getElementById("contactForm");
@@ -42,10 +44,16 @@ class EnhancedFormHandler {
 
     const formData = new FormData(this.form);
     const btn = this.form.querySelector(".send-btn");
+    const checkmark = btn.querySelector(".checkmark-icon");
+    const sentMsg = btn.querySelector(".sent-message");
+    const btnText = btn.querySelector(".btn-text");
     const success = this.form.querySelector("#formSuccess");
 
     try {
       btn.classList.add("particle-burst");
+      btnText.style.display = "none";
+      checkmark.style.display = "inline-flex";
+      sentMsg.style.display = "inline";
 
       const response = await fetch(this.form.action, {
         method: "POST",
@@ -55,17 +63,33 @@ class EnhancedFormHandler {
 
       if (response.ok) {
         success.classList.add("active");
+        success.classList.remove("error");
+        success.querySelector(".success-text").textContent =
+          "Transmission Sent!";
         setTimeout(() => {
           this.form.reset();
           success.classList.remove("active");
           btn.classList.remove("particle-burst");
-        }, 3500);
+          btnText.style.display = "inline";
+          checkmark.style.display = "none";
+          sentMsg.style.display = "none";
+        }, FORM_NOTIFICATION_TIMEOUT);
       } else {
         throw new Error("Network response was not ok");
       }
     } catch (error) {
-      alert("⚠️ Something went wrong. Please try again.");
+      success.classList.add("active", "error");
+      success.querySelector(".success-text").textContent =
+        "⚠️ Something went wrong. Please try again.";
       btn.classList.remove("particle-burst");
+      btnText.style.display = "inline";
+      checkmark.style.display = "none";
+      sentMsg.style.display = "none";
+      setTimeout(() => {
+        success.classList.remove("active", "error");
+        success.querySelector(".success-text").textContent =
+          "Transmission Sent!";
+      }, FORM_NOTIFICATION_TIMEOUT);
     }
   }
 }

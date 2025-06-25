@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "python -m http.server 8000",
+    "build": "node build/optimize.js"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +20,8 @@
     "imagemin-webp": "^8.0.0",
     "sharp": "^0.34.2",
     "terser": "^5.43.1"
+  },
+  "dependencies": {
+    "gsap": "^3.12.2"
   }
 }
