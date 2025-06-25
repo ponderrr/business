@@ -926,3 +926,264 @@ html {
   background: rgba(0, 255, 247, 0.2);
   transform: translate(-50%, -50%) scale(1.5);
 }
+
+/* === Advanced Holographic, Morphing, and Quantum Trail Enhancements === */
+
+/* 1. Holographic Hero Animation */
+.hero-hologram {
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(0, 255, 247, 0.3) 50%,
+    transparent 70%
+  );
+  background-size: 200% 200%;
+  animation: hologram-scan 3s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+/* Enhanced hologram effect with glitch */
+.hero-hologram::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 255, 247, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: hologram-glitch 4s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.8;
+}
+
+@keyframes hologram-scan {
+  0%,
+  100% {
+    background-position: -100% -100%;
+    filter: hue-rotate(0deg);
+  }
+  25% {
+    background-position: 0% 0%;
+    filter: hue-rotate(90deg);
+  }
+  50% {
+    background-position: 100% 100%;
+    filter: hue-rotate(180deg);
+  }
+  75% {
+    background-position: 50% 50%;
+    filter: hue-rotate(270deg);
+  }
+}
+
+@keyframes hologram-glitch {
+  0%,
+  90%,
+  100% {
+    background-position: 0% 0%;
+    opacity: 0;
+  }
+  91%,
+  99% {
+    background-position: 100% 0%;
+    opacity: 0.7;
+    transform: translateX(2px);
+  }
+  92%,
+  98% {
+    transform: translateX(-2px);
+  }
+}
+
+/* Enhanced glass card morphing effects */
+.service-card {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.service-card.morphing {
+  border-radius: 50px;
+  transform: scale(1.05) rotateY(5deg);
+  box-shadow: 0 20px 40px rgba(0, 255, 247, 0.2),
+    0 0 60px rgba(0, 255, 247, 0.1), inset 0 0 60px rgba(255, 255, 255, 0.1);
+}
+
+.service-card.morphing .service-icon {
+  transform: rotate(360deg) scale(1.2);
+  filter: drop-shadow(0 0 20px var(--primary-cyan));
+  animation: icon-quantum-pulse 1s ease-in-out infinite alternate;
+}
+
+.service-card.morphing h3 {
+  transform: translateY(-5px) scale(1.1);
+  text-shadow: 0 0 20px rgba(0, 255, 247, 0.5);
+}
+
+@keyframes icon-quantum-pulse {
+  0% {
+    filter: drop-shadow(0 0 20px var(--primary-cyan));
+  }
+  100% {
+    filter: drop-shadow(0 0 30px var(--primary-cyan))
+      drop-shadow(0 0 40px var(--primary-blue));
+  }
+}
+
+/* Quantum particle trail effects */
+.quantum-trail {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 998;
+}
+
+.quantum-trail.entangled {
+  background: radial-gradient(circle, var(--primary-cyan), transparent);
+  animation: quantum-entangled 1s ease-out forwards;
+}
+
+.quantum-trail.superposition {
+  background: radial-gradient(circle, var(--primary-blue), var(--primary-cyan));
+  animation: quantum-superposition 1.5s ease-out forwards;
+}
+
+.quantum-trail.collapsed {
+  background: radial-gradient(circle, var(--primary-orange), transparent);
+  animation: quantum-collapsed 0.8s ease-out forwards;
+}
+
+@keyframes quantum-entangled {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(2) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5) rotate(360deg);
+  }
+}
+
+@keyframes quantum-superposition {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  33% {
+    opacity: 0.6;
+    transform: scale(1.5);
+    filter: blur(2px);
+  }
+  66% {
+    opacity: 0.3;
+    transform: scale(0.8);
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes quantum-collapsed {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  25% {
+    opacity: 0.8;
+    transform: scale(1.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+
+/* Enhanced portfolio card morphing */
+.portfolio-card {
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.portfolio-card.morphing {
+  transform: translateY(-15px) rotateX(8deg) rotateY(8deg) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 50px rgba(0, 255, 247, 0.2),
+    inset 0 0 100px rgba(255, 255, 255, 0.1);
+}
+
+.portfolio-card.morphing .card-image img {
+  transform: scale(1.1) rotateZ(2deg);
+  filter: brightness(1.1) contrast(1.1) saturate(1.2);
+}
+
+/* Holographic text variants for different sections */
+.services h2.holographic {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 247, 0.8) 0%,
+    rgba(106, 141, 255, 0.8) 50%,
+    rgba(255, 179, 0, 0.8) 100%
+  );
+  background-size: 300% 300%;
+  animation: hologram-rainbow 4s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes hologram-rainbow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-hologram::before {
+    display: none; /* Disable glitch effect on mobile for performance */
+  }
+
+  .service-card.morphing,
+  .portfolio-card.morphing {
+    transform: scale(1.02); /* Simplified transforms for mobile */
+  }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .hero-hologram,
+  .hero-hologram::before,
+  .service-card.morphing .service-icon,
+  .quantum-trail {
+    animation: none !important;
+  }
+}

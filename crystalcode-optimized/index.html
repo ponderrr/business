@@ -223,10 +223,12 @@
       </ul>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section with Holographic Effects -->
     <section class="hero" id="hero" role="banner">
-      <h1>Crafting Digital Futures</h1>
-      <p class="subtitle">
+      <h1 class="hero-hologram" data-text="Crafting Digital Futures">
+        Crafting Digital Futures
+      </h1>
+      <p class="subtitle holographic">
         Smart Solutions. Stunning Design. Seamless Results.
       </p>
     </section>
@@ -238,6 +240,7 @@
       data-lazy-load="services"
       role="main"
     >
+      <h2 class="holographic">Our Services</h2>
       <div class="services-grid">
         <!-- AI Automation Service (first) -->
         <div
@@ -827,7 +830,7 @@
       </form>
     </section>
 
-    <!-- Optimized Particle System Container -->
+    <!-- Enhanced Particle System Container -->
     <div
       class="particle-container"
       id="particles"
@@ -879,8 +882,73 @@
       }
     </script>
 
+    <!-- GSAP Scripts for advanced animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <!-- Enhanced Module Loading Script -->
+    <script>
+      // Enhanced initialization to use quantum particle system
+      document.addEventListener("DOMContentLoaded", function () {
+        // Update the critical.js to load enhanced modules
+        if (window.CrystalCode && window.CrystalCode.performanceManager) {
+          // Override particle system module loading
+          const originalLoadModule =
+            window.CrystalCode.performanceManager.loadModule.bind(
+              window.CrystalCode.performanceManager
+            );
+
+          window.CrystalCode.performanceManager.loadModule = async function (
+            moduleName
+          ) {
+            if (moduleName === "particle-system") {
+              // Load quantum particle system instead
+              try {
+                const module = await import(
+                  "./assets/js/modules/quantum-particle-system.js"
+                );
+                if (
+                  module.default &&
+                  typeof module.default.init === "function"
+                ) {
+                  await module.default.init();
+                }
+                window.CrystalCode.performanceManager.constructor.OptimizationState.loadedModules.add(
+                  moduleName
+                );
+                console.log("🌟 Quantum particle system loaded successfully");
+              } catch (error) {
+                console.error("Failed to load quantum particle system:", error);
+                // Fallback to original particle system
+                return originalLoadModule(moduleName);
+              }
+            } else if (moduleName === "magnetic-cards") {
+              // Load enhanced magnetic cards
+              try {
+                const module = await import(
+                  "./assets/js/modules/enhanced-magnetic-cards.js"
+                );
+                if (
+                  module.default &&
+                  typeof module.default.init === "function"
+                ) {
+                  await module.default.init();
+                }
+                window.CrystalCode.performanceManager.constructor.OptimizationState.loadedModules.add(
+                  moduleName
+                );
+                console.log("🔮 Enhanced magnetic cards loaded successfully");
+              } catch (error) {
+                console.error("Failed to load enhanced magnetic cards:", error);
+                return originalLoadModule(moduleName);
+              }
+            } else {
+              return originalLoadModule(moduleName);
+            }
+          };
+        }
+      });
+    </script>
   </body>
 </html>
