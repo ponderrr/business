@@ -21,7 +21,7 @@
         color: #ffffff;
         overflow-x: hidden;
         line-height: 1.4;
-        cursor: none;
+        cursor: auto;
         /* Hide all scrollbars */
         -ms-overflow-style: none; /* IE and Edge */
         scrollbar-width: none; /* Firefox */
@@ -270,6 +270,28 @@
     <meta name="theme-color" content="#000000" />
   </head>
   <body>
+    <script>
+      // EMERGENCY CURSOR FIX - Run immediately
+      console.log("🔴 EMERGENCY: Ensuring cursor visibility");
+      document.documentElement.style.cursor = "auto";
+      document.body.style.cursor = "auto";
+
+      // Override any CSS that might hide cursor
+      const emergencyStyle = document.createElement("style");
+      emergencyStyle.innerHTML = `
+      * { cursor: auto !important; }
+      body { cursor: auto !important; }
+      html { cursor: auto !important; }
+    `;
+      document.head.appendChild(emergencyStyle);
+
+      // Remove emergency styles after 3 seconds
+      setTimeout(() => {
+        emergencyStyle.remove();
+        console.log("🔴 EMERGENCY: Emergency cursor styles removed");
+      }, 3000);
+    </script>
+
     <div class="scroll-progress"></div>
     <!-- Navigation -->
     <nav
@@ -518,7 +540,7 @@
           <div class="card-image">
             <img
               src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+"
-              data-src="assets/images/fallback/app-template.jpg"
+              data-src="assets/images/fallback/app-template.png"
               alt="Smart Advisor - AI-powered recommendations"
               class="progressive-image"
               loading="lazy"
@@ -572,7 +594,7 @@
           <div class="card-image">
             <img
               src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImMiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiBmaWxsPSJ1cmwoI2MpIi8+PC9zdmc+"
-              data-src="assets/images/fallback/founder-template.jpg"
+              data-src="assets/images/fallback/founder-template.png"
               alt="Learn About Our Founder"
               class="progressive-image"
               loading="lazy"
@@ -626,7 +648,7 @@
           <div class="card-image">
             <img
               src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMTUwIiBmaWxsPSJ1cmwoI2QpIi8+PC9zdmc+"
-              data-src="assets/images/fallback/automation-template.jpg"
+              data-src="assets/images/fallback/automation-template.png"
               alt="AI Data Processing Automation"
               class="progressive-image"
               loading="lazy"
@@ -657,7 +679,7 @@
           <div class="card-image">
             <img
               src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxYTFhMWE7c3RvcC1vcGFjaXR5OjEiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojMmEyYTJhO3N0b3Atb3BhY2l0eToxIiAvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ1cmwoI2IpIi8+PC9zdmc+"
-              data-src="assets/images/fallback/business-template.jpg"
+              data-src="assets/images/fallback/business-template.png"
               alt="NextVend - Smart vending solutions"
               class="progressive-image"
               loading="lazy"
@@ -822,16 +844,6 @@
       id="customCursor"
       data-module="custom-cursor"
       aria-hidden="true"
-      style="
-        top: 100px;
-        left: 100px;
-        display: block;
-        background: red;
-        width: 100px;
-        height: 100px;
-        z-index: 99999;
-        position: fixed;
-      "
     ></div>
 
     <!-- Non-critical CSS - loads after critical rendering -->

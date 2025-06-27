@@ -705,3 +705,18 @@ if (typeof module !== "undefined" && module.exports) {
 }
 
 console.log("⚡ CrystalCode Critical JavaScript loaded successfully!");
+
+// Emergency cursor visibility fix
+document.addEventListener("DOMContentLoaded", function () {
+  // Ensure cursor is visible immediately
+  document.body.style.cursor = "auto";
+
+  // Only hide after custom cursor is confirmed working
+  setTimeout(() => {
+    const customCursor = document.getElementById("customCursor");
+    if (customCursor && customCursor.style.display !== "none") {
+      // Custom cursor exists and is visible
+      document.body.style.cursor = "none";
+    }
+  }, 100);
+});

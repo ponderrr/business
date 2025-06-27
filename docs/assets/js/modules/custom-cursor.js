@@ -15,22 +15,49 @@ class CustomCursor {
   }
 
   initializeCursor() {
-    // Always re-fetch the cursor element in case DOM changes
+    // Check if we're on desktop
+    const isDesktop = window.innerWidth > 768;
+
+    console.log("🔍 Cursor Debug:", {
+      isDesktop,
+      windowWidth: window.innerWidth,
+      cursorElement: !!document.getElementById("customCursor"),
+    });
+
     this.cursor = document.getElementById("customCursor");
-    if (this.cursor /* && !this.isMobile */) {
+
+    if (this.cursor && isDesktop) {
+      // Desktop: Use custom cursor
       if (!this.active) {
         this.init();
+        document.body.classList.add("custom-cursor-active");
         document.body.style.cursor = "none";
+        this.cursor.style.display = "block";
         this.active = true;
+        console.log("✅ Custom cursor activated for desktop");
       }
     } else {
-      if (this.active) {
-        this.cleanup(); // Clean up event listeners when disabling
-        document.body.style.cursor = "";
-        if (this.cursor) this.cursor.style.display = "none";
-        this.active = false;
-      }
+      // Mobile or no cursor element: Use system cursor
+      this.enableFallbackCursor();
+      console.log("✅ System cursor activated for mobile/fallback");
     }
+  }
+
+  enableFallbackCursor() {
+    document.body.classList.remove("custom-cursor-active");
+    document.body.style.cursor = "auto";
+    if (this.cursor) {
+      this.cursor.style.display = "none";
+    }
+    this.active = false;
+  }
+
+  canUseCustomCursor() {
+    return (
+      !this.isMobile &&
+      "addEventListener" in document &&
+      "requestAnimationFrame" in window
+    );
   }
 
   handleResize() {
@@ -50,11 +77,19 @@ class CustomCursor {
   }
 
   setupCursorTracking() {
-    // Create bound event handlers and store references
     const handleMouseMove = (e) => {
-      requestAnimationFrame(() => {
-        this.cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-      });
+      if (this.cursor && window.innerWidth > 768) {
+        requestAnimationFrame(() => {
+          // Force position update with stronger styles
+          this.cursor.style.left = e.clientX + "px";
+          this.cursor.style.top = e.clientY + "px";
+          this.cursor.style.transform = "translate(-50%, -50%)";
+          this.cursor.style.display = "block";
+          this.cursor.style.opacity = "1";
+          this.cursor.style.visibility = "visible";
+          this.cursor.style.zIndex = "99999";
+        });
+      }
     };
 
     const handleMouseDown = () => {
@@ -161,8 +196,23 @@ class CustomCursor {
   }
 }
 
+// Force immediate initialization for debugging
+if (typeof window !== "undefined") {
+  window.addEventListener("DOMContentLoaded", () => {
+    console.log("🔴 DEBUG: Initializing custom cursor immediately");
+    try {
+      const cursor = new CustomCursor();
+      window.debugCursor = cursor; // For debugging
+      console.log("🔴 DEBUG: Custom cursor initialized", cursor);
+    } catch (error) {
+      console.error("🔴 DEBUG: Custom cursor failed", error);
+      document.body.style.cursor = "auto";
+    }
+  });
+}
+
 export default {
   async init() {
-    new CustomCursor();
+    return new CustomCursor();
   },
 };
