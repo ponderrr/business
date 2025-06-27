@@ -1,18 +1,23 @@
 class CustomCursor {
   constructor() {
     this.cursor = document.getElementById("customCursor");
-    this.isMobile = window.innerWidth <= 768;
     this.active = false;
+    this.eventHandlers = new Map(); // Store references to event handlers
+    this.formElements = []; // Store references to form elements
     this.handleResize = this.handleResize.bind(this);
     window.addEventListener("resize", this.handleResize);
+    this.eventHandlers.set("window-resize", {
+      element: window,
+      event: "resize",
+      handler: this.handleResize,
+    });
     this.initializeCursor();
   }
 
   initializeCursor() {
     // Always re-fetch the cursor element in case DOM changes
     this.cursor = document.getElementById("customCursor");
-    this.isMobile = window.innerWidth <= 768;
-    if (this.cursor && !this.isMobile) {
+    if (this.cursor /* && !this.isMobile */) {
       if (!this.active) {
         this.init();
         document.body.style.cursor = "none";
@@ -20,6 +25,7 @@ class CustomCursor {
       }
     } else {
       if (this.active) {
+        this.cleanup(); // Clean up event listeners when disabling
         document.body.style.cursor = "";
         if (this.cursor) this.cursor.style.display = "none";
         this.active = false;
@@ -44,31 +50,42 @@ class CustomCursor {
   }
 
   setupCursorTracking() {
-    document.addEventListener(
-      "mousemove",
-      (e) => {
-        requestAnimationFrame(() => {
-          this.cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-        });
-      },
-      { passive: true }
-    );
+    // Create bound event handlers and store references
+    const handleMouseMove = (e) => {
+      requestAnimationFrame(() => {
+        this.cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+      });
+    };
 
-    document.addEventListener(
-      "mousedown",
-      () => {
-        this.cursor.classList.add("clicking");
-      },
-      { passive: true }
-    );
+    const handleMouseDown = () => {
+      this.cursor.classList.add("clicking");
+    };
 
-    document.addEventListener(
-      "mouseup",
-      () => {
-        this.cursor.classList.remove("clicking");
-      },
-      { passive: true }
-    );
+    const handleMouseUp = () => {
+      this.cursor.classList.remove("clicking");
+    };
+
+    // Add event listeners
+    document.addEventListener("mousemove", handleMouseMove, { passive: true });
+    document.addEventListener("mousedown", handleMouseDown, { passive: true });
+    document.addEventListener("mouseup", handleMouseUp, { passive: true });
+
+    // Store references for cleanup
+    this.eventHandlers.set("document-mousemove", {
+      element: document,
+      event: "mousemove",
+      handler: handleMouseMove,
+    });
+    this.eventHandlers.set("document-mousedown", {
+      element: document,
+      event: "mousedown",
+      handler: handleMouseDown,
+    });
+    this.eventHandlers.set("document-mouseup", {
+      element: document,
+      event: "mouseup",
+      handler: handleMouseUp,
+    });
   }
 
   setupFormInteractions() {
@@ -79,14 +96,68 @@ class CustomCursor {
       );
       return;
     }
-    formElements.forEach((el) => {
-      el.addEventListener("mouseenter", () => {
+
+    // Clear previous form elements
+    this.formElements = [];
+
+    formElements.forEach((el, index) => {
+      // Create bound event handlers
+      const handleMouseEnter = () => {
         this.cursor.classList.add("form-focus");
-      });
-      el.addEventListener("mouseleave", () => {
+      };
+
+      const handleMouseLeave = () => {
         this.cursor.classList.remove("form-focus");
+      };
+
+      // Add event listeners
+      el.addEventListener("mouseenter", handleMouseEnter);
+      el.addEventListener("mouseleave", handleMouseLeave);
+
+      // Store references for cleanup
+      this.eventHandlers.set(`form-${index}-mouseenter`, {
+        element: el,
+        event: "mouseenter",
+        handler: handleMouseEnter,
       });
+      this.eventHandlers.set(`form-${index}-mouseleave`, {
+        element: el,
+        event: "mouseleave",
+        handler: handleMouseLeave,
+      });
+      this.formElements.push(el);
     });
+  }
+
+  cleanup() {
+    // Remove all stored event listeners
+    this.eventHandlers.forEach(({ element, event, handler }) => {
+      element.removeEventListener(event, handler);
+    });
+
+    // Clear the event handlers map
+    this.eventHandlers.clear();
+
+    // Clear form elements array
+    this.formElements = [];
+  }
+
+  destroy() {
+    // Remove the window resize listener
+    window.removeEventListener("resize", this.handleResize);
+
+    // Clean up all other event listeners
+    this.cleanup();
+
+    // Reset cursor styles
+    if (this.cursor) {
+      this.cursor.style.display = "none";
+    }
+    document.body.style.cursor = "";
+
+    // Reset state
+    this.active = false;
+    this.cursor = null;
   }
 }
 

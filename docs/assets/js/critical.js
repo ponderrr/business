@@ -239,7 +239,7 @@ class CriticalPerformanceManager {
 
   preloadCriticalModules() {
     // Preload modules that are likely to be needed soon
-    requestIdleCallback(
+    CriticalUtils.requestIdleCallback(
       () => {
         if (OptimizationState.isHighPerformanceDevice) {
           this.loadModule("particle-system");
@@ -342,6 +342,17 @@ class CriticalUtils {
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
+  }
+
+  static requestIdleCallback(callback, options = {}) {
+    // Check if requestIdleCallback is supported
+    if (typeof window.requestIdleCallback !== "undefined") {
+      return window.requestIdleCallback(callback, options);
+    } else {
+      // Fallback for browsers that don't support requestIdleCallback
+      const timeout = options.timeout || 1000;
+      return setTimeout(callback, timeout);
+    }
   }
 
   static prefersReducedMotion() {
@@ -544,9 +555,8 @@ class CriticalFormHandler {
 class BasicCustomCursor {
   constructor() {
     this.cursor = document.getElementById("customCursor");
-    this.isMobile = window.innerWidth <= 768;
 
-    if (this.cursor && !this.isMobile) {
+    if (this.cursor) {
       this.init();
     }
   }
@@ -657,7 +667,7 @@ function loadNonCriticalCSS() {
 }
 
 // Load non-critical CSS after critical path
-requestIdleCallback(loadNonCriticalCSS, { timeout: 2000 });
+CriticalUtils.requestIdleCallback(loadNonCriticalCSS, { timeout: 2000 });
 
 /**
  * Performance Budget Monitoring

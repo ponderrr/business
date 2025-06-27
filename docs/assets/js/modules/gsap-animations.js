@@ -235,7 +235,8 @@ class SmoothScrolling {
         e.preventDefault();
         const target = document.querySelector(anchor.getAttribute("href"));
 
-        if (target) {
+        // Enhanced null check to prevent runtime errors
+        if (target && target !== null) {
           gsap.to(window, {
             duration: 1.5,
             scrollTo: {
@@ -244,6 +245,13 @@ class SmoothScrolling {
             },
             ease: "power3.inOut",
           });
+        } else {
+          // Log warning if target element doesn't exist
+          console.warn(
+            `Target element not found for anchor: ${anchor.getAttribute(
+              "href"
+            )}`
+          );
         }
       });
     });

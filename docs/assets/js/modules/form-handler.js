@@ -78,6 +78,7 @@ class EnhancedFormHandler {
         throw new Error("Network response was not ok");
       }
     } catch (error) {
+      console.error("Form submission error:", error);
       success.classList.add("active", "error");
       success.querySelector(".success-text").textContent =
         "⚠️ Something went wrong. Please try again.";
@@ -87,8 +88,6 @@ class EnhancedFormHandler {
       sentMsg.style.display = "none";
       setTimeout(() => {
         success.classList.remove("active", "error");
-        success.querySelector(".success-text").textContent =
-          "Transmission Sent!";
       }, FORM_NOTIFICATION_TIMEOUT);
     }
   }

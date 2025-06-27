@@ -3,13 +3,30 @@ const path = require("path");
 const { minify } = require("terser");
 const CleanCSS = require("clean-css");
 
+// Helper function to safely remove directory recursively
+function removeDirectoryRecursive(dirPath) {
+  const nodeVersion = process.version;
+  const majorVersion = parseInt(nodeVersion.slice(1).split(".")[0]);
+  const minorVersion = parseInt(nodeVersion.slice(1).split(".")[1]);
+
+  // Check if Node.js version supports fs.rmSync (14.14.0+)
+  if (majorVersion > 14 || (majorVersion === 14 && minorVersion >= 14)) {
+    fs.rmSync(dirPath, { recursive: true, force: true });
+  } else {
+    // Fallback for older Node.js versions
+    if (fs.existsSync(dirPath)) {
+      fs.rmdirSync(dirPath, { recursive: true });
+    }
+  }
+}
+
 async function build() {
   console.log("🔧 Starting build optimization...");
 
   // Clean up old build files by deleting the dist directory if it exists
   try {
     if (fs.existsSync("dist")) {
-      fs.rmSync("dist", { recursive: true, force: true });
+      removeDirectoryRecursive("dist");
       console.log("🧹 Cleaned up old dist directory.");
     }
   } catch (err) {
@@ -84,7 +101,21 @@ async function build() {
   const distJsDir = "dist/assets/js/modules";
   try {
     const jsFiles = fs.readdirSync(jsDir);
-    for (const file of jsFiles) {
+    const jsFileFilter = jsFiles.filter(
+      (file) => path.extname(file).toLowerCase() === ".js"
+    );
+
+    if (jsFileFilter.length === 0) {
+      console.warn(
+        "⚠️  Warning: No JavaScript files found in assets/js/modules directory."
+      );
+    } else {
+      console.log(
+        `📦 Processing ${jsFileFilter.length} JavaScript module(s)...`
+      );
+    }
+
+    for (const file of jsFileFilter) {
       try {
         const code = fs.readFileSync(path.join(jsDir, file), "utf8");
         const minified = await minify(code, {
@@ -98,6 +129,7 @@ async function build() {
           throw new Error("Terser did not return minified code.");
         }
         fs.writeFileSync(path.join(distJsDir, file), minified.code);
+        console.log(`✅ Minified: ${file}`);
       } catch (err) {
         console.error(
           `❌ Error minifying JS module ${file}. Minified JS file was not written:`,
@@ -111,9 +143,15 @@ async function build() {
 
   // Copy and minify critical JS
   try {
-    const criticalJs = fs.readFileSync("assets/js/critical.js", "utf8");
-    const minifiedCritical = await minify(criticalJs);
-    fs.writeFileSync("dist/assets/js/critical.js", minifiedCritical.code);
+    if (!fs.existsSync("assets/js/critical.js")) {
+      console.warn(
+        "⚠️  Warning: assets/js/critical.js not found. Skipping critical JS minification."
+      );
+    } else {
+      const criticalJs = fs.readFileSync("assets/js/critical.js", "utf8");
+      const minifiedCritical = await minify(criticalJs);
+      fs.writeFileSync("dist/assets/js/critical.js", minifiedCritical.code);
+    }
   } catch (err) {
     console.error("❌ Error minifying critical JS:", err);
   }

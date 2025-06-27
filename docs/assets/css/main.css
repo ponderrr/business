@@ -147,6 +147,7 @@
   contain: layout style paint;
   opacity: 0;
   transform: translateY(50px) rotateX(-15deg) scale(0.9);
+  pointer-events: auto !important;
 }
 
 .service-card:hover {
@@ -167,6 +168,7 @@
   color: var(--text-primary);
   transition: all var(--transition-smooth);
   contain: layout style paint;
+  pointer-events: auto !important;
 }
 
 .service-card:hover .service-icon {
@@ -181,6 +183,7 @@
   color: var(--text-primary);
   margin-bottom: 16px;
   letter-spacing: -0.01em;
+  pointer-events: auto !important;
 }
 
 .service-card p {
@@ -189,6 +192,7 @@
   font-size: 15px;
   margin-bottom: 24px;
   flex: 1;
+  pointer-events: auto !important;
 }
 
 .service-link {
@@ -202,6 +206,7 @@
   transition: all var(--transition-smooth);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
+  pointer-events: auto !important;
 }
 
 .service-link:hover {
@@ -227,6 +232,7 @@
   filter: drop-shadow(0 0 8px var(--primary-cyan));
   animation: pulseGlow 1.5s infinite;
   will-change: stroke-width, opacity;
+  pointer-events: auto !important;
 }
 
 @keyframes shimmerMove {
@@ -242,6 +248,7 @@
   animation: shimmerMove 2s linear infinite;
   opacity: 0.7;
   will-change: transform;
+  pointer-events: auto !important;
 }
 
 @keyframes spin {
@@ -257,6 +264,7 @@
   animation: spin 2.5s linear infinite;
   transform-origin: center;
   will-change: transform;
+  pointer-events: auto !important;
 }
 
 @keyframes colorShift {
@@ -278,6 +286,7 @@
 .mobile-apps-icon .color-shift {
   animation: colorShift 2.5s linear infinite;
   will-change: fill;
+  pointer-events: auto !important;
 }
 
 /* Portfolio Section - Optimized Grid */
@@ -311,6 +320,7 @@
   flex-direction: column;
   transition: all var(--transition-smooth);
   contain: layout style paint;
+  pointer-events: auto !important;
 }
 
 .portfolio-card.large {
@@ -337,6 +347,7 @@
   background: #1a1a1a;
   position: relative;
   contain: layout style paint;
+  pointer-events: auto !important;
 }
 
 .card-image img {
@@ -345,6 +356,7 @@
   object-fit: cover;
   transition: transform var(--transition-smooth);
   will-change: transform;
+  pointer-events: auto !important;
 }
 
 .portfolio-card:hover .card-image img {
@@ -357,6 +369,7 @@
   filter: blur(5px);
   transform: scale(1.05);
   will-change: filter, transform;
+  pointer-events: auto !important;
 }
 
 .progressive-image.loaded {
@@ -371,6 +384,7 @@
   flex-direction: column;
   justify-content: space-between;
   contain: layout style;
+  pointer-events: auto !important;
 }
 
 .card-header {
@@ -385,6 +399,7 @@
   letter-spacing: 0.5px;
   margin-bottom: 8px;
   display: block;
+  pointer-events: auto !important;
 }
 
 .portfolio-card h3 {
@@ -394,6 +409,7 @@
   margin-bottom: 0;
   letter-spacing: -0.01em;
   transition: color var(--transition-smooth);
+  pointer-events: auto !important;
 }
 
 .card-description {
@@ -401,6 +417,7 @@
   color: var(--text-muted);
   line-height: 1.6;
   margin: 0;
+  pointer-events: auto !important;
 }
 
 .card-link {
@@ -422,6 +439,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   will-change: opacity, transform;
+  pointer-events: auto !important;
 }
 
 .card-link:hover {
@@ -477,6 +495,7 @@
   position: relative;
   z-index: 2;
   contain: layout style;
+  pointer-events: auto !important;
 }
 
 .form-group {
@@ -499,6 +518,7 @@
   backdrop-filter: blur(12px) saturate(180%);
   resize: none;
   will-change: border-color, box-shadow;
+  pointer-events: auto !important;
 }
 
 .glass-input:focus {
@@ -512,6 +532,7 @@ textarea.glass-input {
   font-size: 17px;
   padding: 20px 20px;
   resize: vertical;
+  pointer-events: auto !important;
 }
 
 /* Enhanced Send Button with GPU Acceleration */
@@ -535,6 +556,7 @@ textarea.glass-input {
   outline: none;
   z-index: 1;
   will-change: box-shadow, transform;
+  pointer-events: auto !important;
 }
 
 .send-btn:hover,
@@ -667,17 +689,22 @@ textarea.glass-input {
 /* Custom Cursor Enhancements */
 .custom-cursor {
   position: fixed;
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  width: 40px;
+  height: 40px;
+  border: 3px solid red;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 99999;
   transform: translate(-50%, -50%);
   transition: all 0.1s ease;
   backdrop-filter: blur(5px);
-  background: rgba(255, 255, 255, 0.1);
+  background: yellow !important;
+  box-shadow: 0 0 20px 10px rgba(255, 0, 0, 0.5),
+    0 0 40px 20px rgba(255, 255, 0, 0.3);
   will-change: transform, border-color, box-shadow;
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
 }
 
 .custom-cursor.clicking {
@@ -730,9 +757,9 @@ textarea.glass-input {
     cursor: auto;
   }
 
-  .custom-cursor {
+  /* .custom-cursor {
     display: none;
-  }
+  } */
 
   .nav-links {
     display: none;

@@ -242,6 +242,7 @@ class QuantumMagneticField {
     this.resonance = 0;
     this.lastUpdate = performance.now();
     this.fieldParticles = [];
+    this.originalFilters = new Map(); // Store original filter values for each card
   }
 
   updateField(e, card) {
@@ -287,6 +288,9 @@ class QuantumMagneticField {
 
     document.body.appendChild(particle);
 
+    // Add particle to tracking array
+    this.fieldParticles.push(particle);
+
     // Animate field particle
     const angle = Math.random() * Math.PI * 2;
     const distance = 50 + Math.random() * 100;
@@ -300,28 +304,60 @@ class QuantumMagneticField {
         opacity: 0,
         duration: duration,
         ease: "power2.out",
-        onComplete: () => particle.remove(),
+        onComplete: () => {
+          particle.remove();
+          // Remove from tracking array when animation completes
+          const index = this.fieldParticles.indexOf(particle);
+          if (index > -1) {
+            this.fieldParticles.splice(index, 1);
+          }
+        },
       });
     } else {
       particle.style.animation = `fieldParticleMove ${duration}s ease-out forwards`;
-      setTimeout(() => particle.remove(), duration * 1000);
+      setTimeout(() => {
+        particle.remove();
+        // Remove from tracking array when animation completes
+        const index = this.fieldParticles.indexOf(particle);
+        if (index > -1) {
+          this.fieldParticles.splice(index, 1);
+        }
+      }, duration * 1000);
     }
   }
 
   applyFieldEffects(card) {
+    // Store original filter if not already stored
+    if (!this.originalFilters.has(card)) {
+      this.originalFilters.set(card, card.style.filter || "");
+    }
+
     if (this.fieldStrength > 0.5) {
       const oscillation = Math.sin(this.resonance * 4) * 2;
-      card.style.filter = `
+      const quantumFilter = `
         brightness(${1 + this.fieldStrength * 0.1}) 
         hue-rotate(${oscillation}deg)
         drop-shadow(0 0 ${this.fieldStrength * 20}px rgba(0, 255, 247, 0.3))
       `;
+
+      // Combine original filter with quantum effects
+      const originalFilter = this.originalFilters.get(card);
+      card.style.filter = originalFilter
+        ? `${originalFilter} ${quantumFilter}`
+        : quantumFilter;
     } else {
-      card.style.filter = "";
+      // Restore original filter
+      card.style.filter = this.originalFilters.get(card);
     }
   }
 
   destroy() {
+    // Restore original filters for all cards
+    this.originalFilters.forEach((originalFilter, card) => {
+      card.style.filter = originalFilter;
+    });
+    this.originalFilters.clear();
+
     this.fieldParticles.forEach((particle) => {
       if (particle.parentNode) {
         particle.parentNode.removeChild(particle);
